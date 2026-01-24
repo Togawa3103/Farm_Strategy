@@ -1,3 +1,10 @@
 Farm_Strategy.sln
 x64/
 .vs/
+Farm_Strategy/Debug/
+Farm_Strategy/x64/
+Farm_Strategy/*vcxproj
+Farm_Strategy/*vcxproj.filters
+Farm_Strategy/*vcxproj.user
+
+
