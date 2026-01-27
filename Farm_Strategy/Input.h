@@ -8,4 +8,5 @@ public:
 public:
 	Input();
 	~Input();
+	void Update(); //キー入力更新
 };

@@ -6,3 +6,7 @@ Input::Input() {
 
 Input::~Input() {}
 
+void Input::Update() {
+	GetHitKeyStateAll(this->keyState); //ƒL[“ü—Íæ“¾
+}
+

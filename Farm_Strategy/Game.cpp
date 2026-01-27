@@ -15,15 +15,18 @@ Game::Game() {
 	SetTransColor(182, 185, 184); //グラフィックで透明色にする色をセット
 
 	ClearDrawScreen(); //画面に描画されたものを消去する
-
-	this->input;
-	this->player;
 }
 
 Game::~Game() {}
 
 void Game::Update() {
-	if (input.keyState[KEY_INPUT_D]) {
-		this->player.t++;
-	}
+	this->player.Update();	
+	this->time.Update();
+	this->map.Update(this->player.data);
+}
+
+void Game::Draw() {
+	this->time.DrawTime(this->time.time);
+	this->map.DrawMAP();
+	this->player.DrawPlayer();
 }
