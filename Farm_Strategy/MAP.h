@@ -1,6 +1,9 @@
 #pragma once
 #include"DxLib.h"
 #include"MAPChangeData.h"
+#include"Crop.h"
+
+#include<vector>
 
 #define WIDTH 40
 #define HEIGHT 40
@@ -25,12 +28,17 @@ class MAP {
 public:
 	MAP();
 	~MAP();
-	void Update(RETURN_DATA data);
-	void DrawMAP();
+	void Update(RETURN_DATA data); //マップの更新
+	void DrawMAP(); //マップの表示
 	void GetMAPChangeData(RETURN_DATA data); //Playerが行動を起こした座標の取得
+	void UpdateCROP(); //すべての作物の更新
+	void DeleteCROP(int x,int y); //作物の削除
+	CROP MakeCROP();
+	void LoadCropGraph(); //画像をロード
 public:
-	int map[WIDTH][HEIGHT];
+	std::vector<CROP> cropVec; //すべての作物
+	int map[WIDTH][HEIGHT]; //マップの情報
 	unsigned int color_black; //黒色
 	unsigned int color_white; //白色
-	unsigned int color_red; //白色
+	unsigned int color_red; //赤色
 };
