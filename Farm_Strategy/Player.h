@@ -2,6 +2,8 @@
 #include"Input.h"
 #include"DxLib.h"
 #include"MAPChangeData.h"
+#include"Tool.h"
+#include"Animation.h"
 
 #define WIDTH 40
 #define HEIGHT 40
@@ -31,7 +33,9 @@ public:
 	void DrawPlayer(); //プレイヤーの表示
 	void Action(); //入力による行動選択
 	void InitData(); //Dataの初期化
+	void LoadToolGraph(); //ツールの画像ロード
 public:
+	int toolNum;
 	int x; //プレイヤーのx座標
 	int y; //プレイヤーのy座標
 	int helf_w; //プレイヤーのx座標
@@ -41,4 +45,5 @@ public:
 
 	Input input; //入力クラス
 	RETURN_DATA data; //プレイヤーから渡すアクションの情報
+	std::vector<Animation> animaVec;
 };

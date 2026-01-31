@@ -12,6 +12,7 @@ public:
 	void Game_MainLoop(); //メインループ
 	void Update();
 	void Draw();
+	void Init();
 public:
 	int game_Mode; //ゲームの状態
 	int fps; //FPS

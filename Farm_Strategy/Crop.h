@@ -10,7 +10,7 @@ public:
 	~CROP();
 	void Update(); // CROPの更新
 	void GrowUp(int cropPicHandle); //成長後の表示する画像の更新
-	void DrawCrop(int startX, int startY, int endX, int endY);
+	void DrawCrop(int startX, int startY, int endX, int endY); //作物の表示
 public:
 	int cropNum; //作物番号
 	int cropGrowth; //作物成長段階

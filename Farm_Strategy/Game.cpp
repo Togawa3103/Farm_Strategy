@@ -30,3 +30,8 @@ void Game::Draw() {
 	this->map.DrawMAP();
 	this->player.DrawPlayer();
 }
+
+void Game::Init() {
+	this->map.LoadCropGraph();
+	this->player.LoadToolGraph();
+}
