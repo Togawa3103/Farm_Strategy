@@ -21,26 +21,27 @@ void Player::Update() {
 }
 
 void Player::DrawPlayer() {
-	//DrawBox(295 + this->x, 240 + this->y, 305 + this->x, 250 + this->y, this->color_red,TRUE);	//	プレイヤー表示
+	DrawBox(295 + this->x, 240 + this->y, 305 + this->x, 250 + this->y, this->color_red,TRUE);	//	プレイヤー表示
+	//カーソル表示
 	DrawBox(MAPW_START_WIDTH + MAP_SELL_LENGTH * ((this->helf_w + this->x) / MAP_SELL_LENGTH),
 		MAPW_START_HEIGHT + MAP_SELL_LENGTH * ((this->helf_h + this->y) / MAP_SELL_LENGTH),
 		MAPW_END_WIDTH + MAP_SELL_LENGTH * ((this->helf_w + this->x) / MAP_SELL_LENGTH),
-		MAPW_END_HEIGHT + MAP_SELL_LENGTH * ((this->helf_h + this->y) / MAP_SELL_LENGTH), this->color_yellow, TRUE);
+		MAPW_END_HEIGHT + MAP_SELL_LENGTH * ((this->helf_h + this->y) / MAP_SELL_LENGTH), this->color_yellow, TRUE); 
 
 }
 
 void Player::Action() {
 	if (this->input.keyState[KEY_INPUT_D]) { //キー「D」を押下しているとき
-		this->x++;
+		if(x<200-1)this->x++;
 	}
 	if (this->input.keyState[KEY_INPUT_A]) { //キー「A」を押下しているとき
-		this->x--;
+		if (x > -200)this->x--;
 	}
 	if (this->input.keyState[KEY_INPUT_S]) { //キー「S」を押下しているとき
-		this->y++;
+		if (y < 200-1)this->y++;
 	}
 	if (this->input.keyState[KEY_INPUT_W]) { //キー「W」を押下しているとき
-		this->y--;
+		if (y > -200)this->y--;
 	}
 	if (this->input.keyState[KEY_INPUT_SPACE]) { //キー「SPACE」を押下しているとき
 		this->data = { (this->helf_w + this->x) / MAP_SELL_LENGTH ,(this->helf_h + this->y) / MAP_SELL_LENGTH, Action_SPACE};

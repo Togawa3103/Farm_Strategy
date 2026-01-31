@@ -22,12 +22,6 @@
 #define MAPBG_END_WIDTH 505
 #define MAPBG_END_HEIGHT 450
 
-enum {
-	Action_SPACE,
-	Action_RETURN,
-	Actoin_MAX
-};
-
 
 class Player {
 public:
@@ -46,5 +40,5 @@ public:
 	unsigned int color_yellow; //黄色
 
 	Input input; //入力クラス
-	RETURN_DATA data;
+	RETURN_DATA data; //プレイヤーから渡すアクションの情報
 };

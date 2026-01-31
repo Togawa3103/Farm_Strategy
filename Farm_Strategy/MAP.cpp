@@ -14,6 +14,14 @@ MAP::MAP() {
 	}
 	
 	this->cropVec.clear();
+	for (int i = 0; i < crop_PicData.size(); i++) {
+		//std::vector<ANIMATION_DATA> anima(crop_PicData[i].maxGrowth);
+		//this->animaVec(crop_PicData[i].maxGrowth);
+		for (int j = 0; j < crop_PicData[i].maxGrowth;j++) {
+			Animation anima;
+			this->animaVec.push_back(anima);
+		}
+	}
 }
 
 MAP::~MAP() {}
@@ -44,9 +52,13 @@ void MAP::DrawMAP() {
 	}
 	if (this->cropVec.size()>0) {
 		for (int i = 0; i < this->cropVec.size(); i++) {
-			DrawExtendGraph(MAPB_START_WIDTH + MAP_SELL_LENGTH * this->cropVec[i].x, MAPB_START_HEIGHT + MAP_SELL_LENGTH * this->cropVec[i].y,
-					MAPB_END_WIDTH + MAP_SELL_LENGTH * this->cropVec[i].x, MAPB_END_HEIGHT + MAP_SELL_LENGTH * this->cropVec[i].y,
-					this->cropVec[i].cropPicHandle, TRUE);
+			//DrawExtendGraph(MAPB_START_WIDTH + MAP_SELL_LENGTH * this->cropVec[i].x, MAPB_START_HEIGHT + MAP_SELL_LENGTH * this->cropVec[i].y,
+			//		MAPB_END_WIDTH + MAP_SELL_LENGTH * this->cropVec[i].x, MAPB_END_HEIGHT + MAP_SELL_LENGTH * this->cropVec[i].y,
+			//		this->cropVec[i].cropPicHandle, TRUE);
+			this->cropVec[i].DrawCrop(MAPB_START_WIDTH + MAP_SELL_LENGTH * this->cropVec[i].x,
+				MAPB_START_HEIGHT + MAP_SELL_LENGTH * this->cropVec[i].y,
+				MAPB_END_WIDTH + MAP_SELL_LENGTH * this->cropVec[i].x,
+				MAPB_END_HEIGHT + MAP_SELL_LENGTH * this->cropVec[i].y);
 		}
 	}
 }
@@ -54,14 +66,23 @@ void MAP::DrawMAP() {
 void MAP::GetMAPChangeData(RETURN_DATA data) {
 	if (data.x >= 0 && data.y >= 0) {
 		switch (data.actionFlag) {
-		case 0:
+		case Action_SPACE:
 			if(this->map[data.x][data.y]==0){			
 				this->map[data.x][data.y] = 1;
 				CROP crop(data.x, data.y, 0, crop_PicData[0].cropPicDataVec[0].cropPicHandle);
+				int count=0;
+				for (int i = 0;i < crop_PicData.size(); i++) {
+					count=count+ crop_PicData[i].cropNum * crop_PicData[i].maxGrowth;
+					if (crop.cropNum== crop_PicData[i].cropNum) {
+						for (int j = count; j < crop_PicData[i].maxGrowth;j++) {
+							crop.anima.push_back(this->animaVec[j]);
+						}
+					}
+				}
 				this->cropVec.push_back(crop);
 			}
 			break;
-		case 1:
+		case Action_RETURN:
 			this->DeleteCROP(data.x, data.y);
 			break;
 		}
@@ -90,6 +111,9 @@ void MAP::LoadCropGraph() {
 	for (int i = 0; i < crop_PicData.size(); i++) {
 		for (int j = 0; j < crop_PicData[i].cropPicDataVec.size(); j++) {
 			crop_PicData[i].cropPicDataVec[j].cropPicHandle = LoadGraph(crop_PicData[i].cropPicDataVec[j].cropPicName);
+			ANIMATION_DATA animaData = { crop_PicData[i].cropPicDataVec[j].startFrame, crop_PicData[i].cropPicDataVec[j].endFrame,
+				crop_PicData[i].cropPicDataVec[j].cropPicHandle };
+			this->animaVec[crop_PicData[i].cropPicDataVec[j].cropGrow].anima.push_back(animaData);
 		}
 	}
 }

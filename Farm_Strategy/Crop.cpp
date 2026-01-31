@@ -9,6 +9,7 @@ CROP::CROP(int x,int y,int cropNum,int cropPicHandle) {
 	this->y = y;
 	this->cropPicHandle = cropPicHandle;
 	this->deleteFlag = false;
+	//this->anima=anima;
 }
 
 CROP::~CROP(){
@@ -16,6 +17,7 @@ CROP::~CROP(){
 
 void CROP::Update() {
 	this->time++;
+	this->anima[this->cropGrowth].Update();
 	if (this->time==500) {
 		this->cropGrowth++;
 	}
@@ -25,4 +27,8 @@ void CROP::GrowUp(int cropPicHandle) {
 	if (this->cropPicHandle!=cropPicHandle) {
 		this->cropPicHandle = cropPicHandle;
 	}
+}
+
+void CROP::DrawCrop(int startX, int startY, int endX, int endY) {
+	this->anima[this->cropGrowth].DrawAnima(startX,startY,endX,endY);
 }

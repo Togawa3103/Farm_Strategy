@@ -2,6 +2,7 @@
 #include"DxLib.h"
 #include<vector>
 #include"Crop_Data.h"
+#include "Animation.h"
 
 class CROP {
 public:
@@ -9,6 +10,7 @@ public:
 	~CROP();
 	void Update(); // CROPの更新
 	void GrowUp(int cropPicHandle); //成長後の表示する画像の更新
+	void DrawCrop(int startX, int startY, int endX, int endY);
 public:
 	int cropNum; //作物番号
 	int cropGrowth; //作物成長段階
@@ -18,4 +20,5 @@ public:
 	unsigned int color_green; //色
 	int cropPicHandle; //表示する画像のハンドル
 	bool deleteFlag;
+	std::vector<Animation> anima;
 };
