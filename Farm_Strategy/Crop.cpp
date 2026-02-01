@@ -1,9 +1,11 @@
 #include"Crop.h"
 
-CROP::CROP(int x,int y,int cropNum,int cropPicHandle) {
+CROP::CROP(int x,int y,int cropNum, int cropMaxGrowth, int score, int cropPicHandle) {
 	this->color_green = GetColor(0, 255, 0);
 	this->cropNum = cropNum;
+	this->cropMaxGrowth = cropMaxGrowth;
 	this->cropGrowth = 0;
+	this->score = score;
 	this->time = 0;
 	this->x = x;
 	this->y = y;
@@ -18,7 +20,7 @@ CROP::~CROP(){
 void CROP::Update() {
 	this->time++;
 	this->anima[this->cropGrowth].Update();
-	if (this->time==500) {
+	if (this->time>500 && this->cropGrowth < this->cropMaxGrowth - 1) {
 		this->cropGrowth++;
 	}
 }

@@ -34,10 +34,13 @@ public:
 	void DeleteCROP(int x,int y); //作物の削除
 	CROP MakeCROP();
 	void LoadCropGraph(); //画像をロード
+	int ReturnScore(int x, int y); //画像をロード
 public:
 	std::vector<CROP> cropVec; //すべての作物
 	std::vector<Animation> animaVec; //すべての作物のアニメーション
 	int map[WIDTH][HEIGHT]; //マップの情報
+	int score;
+
 	unsigned int color_black; //黒色
 	unsigned int color_white; //白色
 	unsigned int color_red; //赤色

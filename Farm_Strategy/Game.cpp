@@ -23,6 +23,7 @@ void Game::Update() {
 	this->player.Update();	
 	this->time.Update();
 	this->map.Update(this->player.data);
+	this->player.GetScore(this->map.score);
 }
 
 void Game::Draw() {

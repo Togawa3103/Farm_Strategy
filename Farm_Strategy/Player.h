@@ -31,17 +31,22 @@ public:
 	~Player();
 	void Update(); //プレイヤーの更新
 	void DrawPlayer(); //プレイヤーの表示
+	void DrawScore();
 	void Action(); //入力による行動選択
 	void InitData(); //Dataの初期化
 	void LoadToolGraph(); //ツールの画像ロード
+	void GetScore(int score); //Actionの結果得られるスコアを取得
 public:
-	int toolNum;
+	int score;
+	int toolNum; //ツール番号
 	int x; //プレイヤーのx座標
 	int y; //プレイヤーのy座標
 	int helf_w; //プレイヤーのx座標
 	int helf_h; //プレイヤーのy座標
 	unsigned int color_red; //赤色
 	unsigned int color_yellow; //黄色
+	unsigned int color_black; //黒色
+	unsigned int color_white; //白色
 
 	Input input; //入力クラス
 	RETURN_DATA data; //プレイヤーから渡すアクションの情報

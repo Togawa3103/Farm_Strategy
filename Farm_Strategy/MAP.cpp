@@ -22,11 +22,13 @@ MAP::MAP() {
 			this->animaVec.push_back(anima);
 		}
 	}
+	this->score = 0;
 }
 
 MAP::~MAP() {}
 
 void MAP::Update(RETURN_DATA data) {
+	this->score = 0;
 	this->GetMAPChangeData(data);
 	this->UpdateCROP();
 }
@@ -67,22 +69,40 @@ void MAP::GetMAPChangeData(RETURN_DATA data) {
 	if (data.x >= 0 && data.y >= 0) {
 		switch (data.actionFlag) {
 		case Action_SPACE:
-			if(this->map[data.x][data.y]==0){			
-				this->map[data.x][data.y] = 1;
-				CROP crop(data.x, data.y, 0, crop_PicData[0].cropPicDataVec[0].cropPicHandle);
-				int count=0;
-				for (int i = 0;i < crop_PicData.size(); i++) {
-					count=count+ crop_PicData[i].cropNum * crop_PicData[i].maxGrowth;
-					if (crop.cropNum== crop_PicData[i].cropNum) {
-						for (int j = count; j < crop_PicData[i].maxGrowth;j++) {
-							crop.anima.push_back(this->animaVec[j]);
+			switch(this->map[data.x][data.y]){
+			case 0:
+				{
+					this->map[data.x][data.y] = 1;
+					CROP crop(data.x, data.y, 0, crop_PicData[0].maxGrowth, crop_PicData[0].score, crop_PicData[0].cropPicDataVec[0].cropPicHandle);
+					int count = 0;
+					for (int i = 0; i < crop_PicData.size(); i++) {
+						count = count + crop_PicData[i].cropNum * crop_PicData[i].maxGrowth;
+						if (crop.cropNum == crop_PicData[i].cropNum) {
+							for (int j = count; j < crop_PicData[i].maxGrowth; j++) {
+								crop.anima.push_back(this->animaVec[j]);
+							}
+						}
+					}
+					this->cropVec.push_back(crop);
+				}
+				break;
+			case 1:
+				switch (data.toolNum) {
+				case 0:
+					break;
+				case 1:
+					for (int i = this->cropVec.size() - 1; i >= 0; i--) {
+						if (this->cropVec[i].x == data.x) {
+							if (this->cropVec[i].y == data.y) {
+								this->cropVec[i].time = this->cropVec[i].time + 10;
+							}
 						}
 					}
 				}
-				this->cropVec.push_back(crop);
 			}
 			break;
 		case Action_RETURN:
+			this->score = ReturnScore(data.x, data.y);
 			this->DeleteCROP(data.x, data.y);
 			break;
 		}
@@ -116,4 +136,17 @@ void MAP::LoadCropGraph() {
 			this->animaVec[crop_PicData[i].cropPicDataVec[j].cropGrow].anima.push_back(animaData);
 		}
 	}
+}
+
+int MAP::ReturnScore(int x,int y) {
+	for (int i = this->cropVec.size() - 1; i >= 0; i--) {
+		if (this->cropVec[i].x == x) {
+			if (this->cropVec[i].y == y) {
+				if (this->cropVec[i].cropGrowth == this->cropVec[i].cropMaxGrowth - 1) {
+					return this->cropVec[i].score;
+				}
+			}
+		}
+	}
+	return 0;
 }

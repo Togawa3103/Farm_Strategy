@@ -12,5 +12,6 @@ typedef struct {
 typedef struct {
 	int cropNum; //作物番号
 	int maxGrowth; //作物最大成長度
+	int score;
 	std::vector<CROP_DATA> cropPicDataVec; //作物データリスト
 }CROP_PIC;
