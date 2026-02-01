@@ -39,7 +39,7 @@ public:
 	std::vector<CROP> cropVec; //すべての作物
 	std::vector<Animation> animaVec; //すべての作物のアニメーション
 	int map[WIDTH][HEIGHT]; //マップの情報
-	int score;
+	int score; //Playerに返すスコア
 
 	unsigned int color_black; //黒色
 	unsigned int color_white; //白色
