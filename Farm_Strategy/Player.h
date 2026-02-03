@@ -7,7 +7,7 @@
 
 #define WIDTH 40
 #define HEIGHT 40
-#define MAP_SELL_LENGTH 10
+#define MAP_SELL_LENGTH 15
 
 #define MAPW_START_WIDTH 100
 #define MAPW_START_HEIGHT 45
@@ -21,9 +21,10 @@
 
 #define MAPBG_START_WIDTH 95
 #define MAPBG_START_HEIGHT 40
-#define MAPBG_END_WIDTH 505
-#define MAPBG_END_HEIGHT 450
+#define MAPBG_END_WIDTH 705
+#define MAPBG_END_HEIGHT 650
 
+#define MAP_MAX_LENGTHXY (WIDTH*MAP_SELL_LENGTH)/2
 
 class Player {
 public:
@@ -35,7 +36,11 @@ public:
 	void Action(); //入力による行動選択
 	void InitData(); //Dataの初期化
 	void LoadToolGraph(); //ツールの画像ロード
-	void GetScore(int score); //Actionの結果得られるスコアを取得
+	void SetScore(int score); //Actionの結果得られるスコアを設定
+	void GetCropNum(int cropNum); //作物番号の取得
+	void SetMaxCropNum(int maxCropNum); //最大作物番号を設定
+	void PayCost(int cost); //コストの支払い
+
 public:
 	int score;
 	int toolNum; //ツール番号
@@ -47,7 +52,8 @@ public:
 	unsigned int color_yellow; //黄色
 	unsigned int color_black; //黒色
 	unsigned int color_white; //白色
-
+	int maxCropNum;
+	int cropNum;
 	Input input; //入力クラス
 	RETURN_DATA data; //プレイヤーから渡すアクションの情報
 	std::vector<Animation> animaVec;

@@ -8,7 +8,7 @@ class CROP {
 public:
 	CROP(int x, int y, int cropNum, int cropMaxGrowth, int score, int cropPicHandle);
 	~CROP();
-	void Update(); // CROPの更新
+	void Update(int growthSpeed); // CROPの更新
 	void GrowUp(int cropPicHandle); //成長後の表示する画像の更新
 	void DrawCrop(int startX, int startY, int endX, int endY); //作物の表示
 public:
@@ -22,5 +22,5 @@ public:
 	unsigned int color_green; //色
 	int cropPicHandle; //表示する画像のハンドル
 	bool deleteFlag;
-	std::vector<Animation> anima;
+	std::vector<Animation> anima; //アニメーションリスト
 };

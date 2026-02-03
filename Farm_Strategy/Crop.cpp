@@ -17,11 +17,11 @@ CROP::CROP(int x,int y,int cropNum, int cropMaxGrowth, int score, int cropPicHan
 CROP::~CROP(){
 }
 
-void CROP::Update() {
+void CROP::Update(int growthSpeed) {
 	this->time++;
 	this->anima[this->cropGrowth].Update();
-	if (this->time>500 && this->cropGrowth < this->cropMaxGrowth - 1) {
-		this->cropGrowth++;
+	if (this->time> (growthSpeed * (this->cropGrowth+1))  && this->cropGrowth < this->cropMaxGrowth - 1) {
+ 		this->cropGrowth++;
 	}
 }
 

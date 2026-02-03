@@ -14,7 +14,7 @@ void Time::Update() {
 }
 
 void Time::DrawTime(int time) {
-	DrawBox(0, 0, 100, 50, this->color_white, TRUE);
-	DrawBox(5, 5, 95, 45, this->color_black, TRUE);
+	DrawBox(0, 0, 50, 50, this->color_white, TRUE);
+	DrawBox(5, 5, 45, 45, this->color_black, TRUE);
 	DrawFormatString(20, 20, this->color_white,std::to_string(time/100).c_str());
 }

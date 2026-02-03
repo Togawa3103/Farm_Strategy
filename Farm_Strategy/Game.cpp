@@ -8,7 +8,7 @@ Game::Game() {
 	this->now=0;
 	this->looptime = 0;
 	ChangeWindowMode(TRUE); //ウインドウモード(TRUE)・フルスクリーンモード(FALSE)の変更(DXライブラリ)
-	SetGraphMode(600, 500, 32); //画面モードの変更(画面の解像度、カラービット数)
+	SetGraphMode(800, 700, 32); //画面モードの変更(画面の解像度、カラービット数)
 	DxLib_Init();   // DXライブラリ初期化処理
 	SetDrawScreen(DX_SCREEN_BACK); //描画先グラフィック領域の指定(DX_SCREEN_FRONT:表の画面　DX_SCREEN_BACK:裏の画面)
 
@@ -23,7 +23,8 @@ void Game::Update() {
 	this->player.Update();	
 	this->time.Update();
 	this->map.Update(this->player.data);
-	this->player.GetScore(this->map.score);
+	this->player.SetScore(this->map.score);
+	this->player.PayCost(this->map.cost);
 }
 
 void Game::Draw() {
@@ -35,4 +36,5 @@ void Game::Draw() {
 void Game::Init() {
 	this->map.LoadCropGraph();
 	this->player.LoadToolGraph();
+	this->player.SetMaxCropNum(this->map.maxCropNum);
 }

@@ -6,7 +6,7 @@
 
 #define WIDTH 40
 #define HEIGHT 40
-#define MAP_SELL_LENGTH 10
+#define MAP_SELL_LENGTH 15
 #define MAPW_START_WIDTH 100
 #define MAPW_START_HEIGHT 45
 #define MAPW_END_WIDTH MAPW_START_WIDTH+MAP_SELL_LENGTH
@@ -19,8 +19,8 @@
 
 #define MAPBG_START_WIDTH 95
 #define MAPBG_START_HEIGHT 40
-#define MAPBG_END_WIDTH 505
-#define MAPBG_END_HEIGHT 450
+#define MAPBG_END_WIDTH 705
+#define MAPBG_END_HEIGHT 650
 
 
 class MAP {
@@ -32,15 +32,16 @@ public:
 	void GetMAPChangeData(RETURN_DATA data); //Playerが行動を起こした座標の取得
 	void UpdateCROP(); //すべての作物の更新
 	void DeleteCROP(int x,int y); //作物の削除
-	CROP MakeCROP();
 	void LoadCropGraph(); //画像をロード
 	int ReturnScore(int x, int y); //画像をロード
+
 public:
 	std::vector<CROP> cropVec; //すべての作物
 	std::vector<Animation> animaVec; //すべての作物のアニメーション
 	int map[WIDTH][HEIGHT]; //マップの情報
 	int score; //Playerに返すスコア
-
+	int cost;
+	int maxCropNum;
 	unsigned int color_black; //黒色
 	unsigned int color_white; //白色
 	unsigned int color_red; //赤色

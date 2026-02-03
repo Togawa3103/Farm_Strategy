@@ -23,12 +23,14 @@ MAP::MAP() {
 		}
 	}
 	this->score = 0;
+	this->maxCropNum = crop_PicData.size();
 }
 
 MAP::~MAP() {}
 
 void MAP::Update(RETURN_DATA data) {
 	this->score = 0;
+	this->cost = 0;
 	this->GetMAPChangeData(data);
 	this->UpdateCROP();
 }
@@ -68,39 +70,44 @@ void MAP::DrawMAP() {
 void MAP::GetMAPChangeData(RETURN_DATA data) {
 	if (data.x >= 0 && data.y >= 0) {
 		switch (data.actionFlag) {
-		case Action_SPACE:
-			switch(this->map[data.x][data.y]){
+		//スペースキーが押されたとき
+		case Action_SPACE: 
+			switch (data.toolNum) {
+			//ツールが"くわ"のとき
 			case 0:
+				switch (this->map[data.x][data.y]) {
+				//農地に作物がないとき
+				case 0: 
 				{
-					this->map[data.x][data.y] = 1;
-					CROP crop(data.x, data.y, 0, crop_PicData[0].maxGrowth, crop_PicData[0].score, crop_PicData[0].cropPicDataVec[0].cropPicHandle);
-					int count = 0;
-					for (int i = 0; i < crop_PicData.size(); i++) {
-						count = count + crop_PicData[i].cropNum * crop_PicData[i].maxGrowth;
-						if (crop.cropNum == crop_PicData[i].cropNum) {
-							for (int j = count; j < crop_PicData[i].maxGrowth; j++) {
-								crop.anima.push_back(this->animaVec[j]);
-							}
+					if (data.score>= crop_PicData[data.cropNum].cost) {
+						this->map[data.x][data.y] = 1;
+						CROP crop(data.x, data.y, data.cropNum, crop_PicData[data.cropNum].maxGrowth, crop_PicData[data.cropNum].score, crop_PicData[data.cropNum].cropPicDataVec[data.cropNum].cropPicHandle);
+						int count = 0;
+						for (int j = 0; j < crop_PicData[data.cropNum].maxGrowth; j++) {
+							crop.anima.push_back(this->animaVec[crop_PicData[data.cropNum].startCropVecNum + j]);
 						}
-					}
-					this->cropVec.push_back(crop);
+						this->cropVec.push_back(crop);
+						this->cost = crop_PicData[data.cropNum].cost;
+					}					
+					break;
+				}
+				//農地に作物があるとき
+				case 1:
+					break;
 				}
 				break;
+			//ツールが"じょうろ"のとき
 			case 1:
-				switch (data.toolNum) {
-				case 0:
-					break;
-				case 1:
-					for (int i = this->cropVec.size() - 1; i >= 0; i--) {
-						if (this->cropVec[i].x == data.x) {
-							if (this->cropVec[i].y == data.y) {
-								this->cropVec[i].time = this->cropVec[i].time + 10;
-							}
+				for (int i = this->cropVec.size() - 1; i >= 0; i--) {
+					if (this->cropVec[i].x == data.x) {
+						if (this->cropVec[i].y == data.y) {
+							this->cropVec[i].time = this->cropVec[i].time + 10;
 						}
 					}
 				}
 			}
 			break;
+		//リターン(エンター)キーが押されたとき
 		case Action_RETURN:
 			this->score = ReturnScore(data.x, data.y);
 			this->DeleteCROP(data.x, data.y);
@@ -108,10 +115,10 @@ void MAP::GetMAPChangeData(RETURN_DATA data) {
 		}
 	}
 }
-
+			
 void MAP::UpdateCROP() {
 	for (int i = 0; i < this->cropVec.size(); i++) {
-		this->cropVec[i].Update();
+		this->cropVec[i].Update(crop_PicData[this->cropVec[i].cropNum].growthSpeed);
 		this->cropVec[i].GrowUp(crop_PicData[this->cropVec[i].cropNum].cropPicDataVec[this->cropVec[i].cropGrowth].cropPicHandle);
 	}
 }
@@ -133,7 +140,7 @@ void MAP::LoadCropGraph() {
 			crop_PicData[i].cropPicDataVec[j].cropPicHandle = LoadGraph(crop_PicData[i].cropPicDataVec[j].cropPicName);
 			ANIMATION_DATA animaData = { crop_PicData[i].cropPicDataVec[j].startFrame, crop_PicData[i].cropPicDataVec[j].endFrame,
 				crop_PicData[i].cropPicDataVec[j].cropPicHandle };
-			this->animaVec[crop_PicData[i].cropPicDataVec[j].cropGrow].anima.push_back(animaData);
+			this->animaVec[crop_PicData[i].cropPicDataVec[j].cropGrow + crop_PicData[i].startCropVecNum].anima.push_back(animaData);
 		}
 	}
 }
