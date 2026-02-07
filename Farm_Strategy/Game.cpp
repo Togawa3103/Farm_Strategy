@@ -22,14 +22,15 @@ Game::~Game() {}
 void Game::Update() {
 	this->player.Update();	
 	this->time.Update();
-	this->map.Update(this->player.data);
-	this->player.SetScore(this->map.score);
-	this->player.PayCost(this->map.cost);
+	this->map.Update(&(this->player.score),this->player.dataVec);
+	//this->player.SetScore();
+	//this->player.PayCost(this->map.cost);
 }
 
 void Game::Draw() {
 	this->time.DrawTime(this->time.time);
 	this->map.DrawMAP();
+	this->map.DrawNumCrop(this->player.cropNum);
 	this->player.DrawPlayer();
 }
 

@@ -22,16 +22,18 @@ MAP::MAP() {
 			this->animaVec.push_back(anima);
 		}
 	}
-	this->score = 0;
+	//this->score = 0;
 	this->maxCropNum = crop_PicData.size();
 }
 
 MAP::~MAP() {}
 
-void MAP::Update(RETURN_DATA data) {
-	this->score = 0;
-	this->cost = 0;
-	this->GetMAPChangeData(data);
+void MAP::Update(int* playerScore,std::vector<RETURN_DATA>& dataVec) {
+	//this->score = 0;
+	//this->cost = 0;
+	for (int i = 0; i < dataVec.size();i++) {
+		this->GetMAPChangeData(playerScore,&dataVec[i]);
+	}
 	this->UpdateCROP();
 }
 
@@ -67,28 +69,35 @@ void MAP::DrawMAP() {
 	}
 }
 
-void MAP::GetMAPChangeData(RETURN_DATA data) {
-	if (data.x >= 0 && data.y >= 0) {
-		switch (data.actionFlag) {
+void MAP::DrawNumCrop(int cropNum) {
+	DrawBox(0, 100, 50, 140, this->color_white, TRUE);
+	DrawBox(5, 95, 45, 135, this->color_black, TRUE);
+	this->animaVec[crop_PicData[cropNum].startCropVecNum + crop_PicData[cropNum].maxGrowth-1].DrawAnima(5, 95,45,135);
+}
+
+void MAP::GetMAPChangeData(int *playerScore,RETURN_DATA *data) {
+	if ((*data).x >= 0 && (*data).y >= 0) {
+		switch ((*data).actionFlag) {
 		//スペースキーが押されたとき
 		case Action_SPACE: 
-			switch (data.toolNum) {
-			//ツールが"くわ"のとき
+			switch ((*data).toolNum) {
+				//ツールが"くわ"のとき
 			case 0:
-				switch (this->map[data.x][data.y]) {
-				//農地に作物がないとき
-				case 0: 
+				switch (this->map[(*data).x][(*data).y]) {
+					//農地に作物がないとき
+				case 0:
 				{
-					if (data.score>= crop_PicData[data.cropNum].cost) {
-						this->map[data.x][data.y] = 1;
-						CROP crop(data.x, data.y, data.cropNum, crop_PicData[data.cropNum].maxGrowth, crop_PicData[data.cropNum].score, crop_PicData[data.cropNum].cropPicDataVec[data.cropNum].cropPicHandle);
+					if ((*playerScore) >= crop_PicData[(*data).cropNum].cost) {
+						this->map[(*data).x][(*data).y] = 1;
+						CROP crop((*data).x, (*data).y, (*data).cropNum, crop_PicData[(*data).cropNum].maxGrowth, crop_PicData[(*data).cropNum].score, crop_PicData[(*data).cropNum].cropPicDataVec[(*data).cropNum].cropPicHandle);
 						int count = 0;
-						for (int j = 0; j < crop_PicData[data.cropNum].maxGrowth; j++) {
-							crop.anima.push_back(this->animaVec[crop_PicData[data.cropNum].startCropVecNum + j]);
+						for (int j = 0; j < crop_PicData[(*data).cropNum].maxGrowth; j++) {
+							crop.anima.push_back(this->animaVec[crop_PicData[(*data).cropNum].startCropVecNum + j]);
 						}
 						this->cropVec.push_back(crop);
-						this->cost = crop_PicData[data.cropNum].cost;
-					}					
+						//this->cost = crop_PicData[(*data).cropNum].cost;
+						*playerScore -= crop_PicData[(*data).cropNum].cost;
+					}
 					break;
 				}
 				//農地に作物があるとき
@@ -96,23 +105,38 @@ void MAP::GetMAPChangeData(RETURN_DATA data) {
 					break;
 				}
 				break;
-			//ツールが"じょうろ"のとき
+				//ツールが"じょうろ"のとき
 			case 1:
 				for (int i = this->cropVec.size() - 1; i >= 0; i--) {
-					if (this->cropVec[i].x == data.x) {
-						if (this->cropVec[i].y == data.y) {
+					if (this->cropVec[i].x == (*data).x) {
+						if (this->cropVec[i].y == (*data).y) {
 							this->cropVec[i].time = this->cropVec[i].time + 10;
 						}
 					}
 				}
+				break;
+				//ツールが"ハサミ"のとき
+			case 2:
+				switch (this->map[(*data).x][(*data).y]) {
+					//農地に作物がないとき
+				case 0:
+					break;
+				case 1:
+					//(*data).returnScore = ReturnScore((*data).x, (*data).y);
+					*playerScore += ReturnScore((*data).x, (*data).y);
+					this->DeleteCROP((*data).x, (*data).y);
+					break;
+				}
 			}
 			break;
 		//リターン(エンター)キーが押されたとき
-		case Action_RETURN:
-			this->score = ReturnScore(data.x, data.y);
-			this->DeleteCROP(data.x, data.y);
+		/*case Action_RETURN:
+			(*data).score = ReturnScore((*data).x, (*data).y);
+			this->DeleteCROP((*data).x, (*data).y);
 			break;
+		*/
 		}
+		
 	}
 }
 			

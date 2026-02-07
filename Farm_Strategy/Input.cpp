@@ -12,12 +12,17 @@ void Input::Update() {
 	if (this->frame > 0) {
 		this->keyState[KEY_INPUT_E] = 0;
 		this->keyState[KEY_INPUT_Q] = 0;
+		this->keyState[KEY_INPUT_Z] = 0;
+
 		//this->keyState[KEY_INPUT_SPACE] = 0;
 		this->frame++;
 	}else if (this->keyState[KEY_INPUT_E]) {
 		this->frame++;
 	}
 	else if (this->keyState[KEY_INPUT_Q]) {
+		this->frame++;
+	}
+	else if (this->keyState[KEY_INPUT_Z]) {
 		this->frame++;
 	}
 	//else if (this->keyState[KEY_INPUT_SPACE]) {

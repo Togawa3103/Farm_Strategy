@@ -7,8 +7,7 @@ Player::Player() {
 	this->toolNum = 0;
 	this->x = 0;
 	this->y = 0;
-	this->data.x = -1;
-	this->data.y = -1;
+	this->dataVec = { { -1,-1,-1,this->cropNum,-1, 0} };
 	this->cropNum=0;
 	this->maxCropNum = maxCropNum;
 	this->helf_w = (WIDTH * MAP_SELL_LENGTH) / 2;
@@ -32,6 +31,7 @@ void Player::Update() {
 
 void Player::DrawPlayer() {
 	this->DrawScore();
+	this->DrawTools();
 	//DrawBox(285 + this->x, 230 + this->y, 295 + this->x, 240 + this->y, this->color_red,TRUE);	//	プレイヤー表示
 	this->animaVec[this->toolNum].DrawAnima(this->helf_w + this->x +50, this->helf_h + this->y -10,
 		this->helf_w + this->x + 95, this->helf_h + this->y + 35);
@@ -40,6 +40,34 @@ void Player::DrawPlayer() {
 		MAPW_START_HEIGHT + MAP_SELL_LENGTH * ((this->helf_h + this->y) / MAP_SELL_LENGTH),
 		MAPW_END_WIDTH + MAP_SELL_LENGTH * ((this->helf_w + this->x) / MAP_SELL_LENGTH),
 		MAPW_END_HEIGHT + MAP_SELL_LENGTH * ((this->helf_h + this->y) / MAP_SELL_LENGTH), this->color_yellow, TRUE); 
+	for (int i = 1; i < 5; i++) {
+		if (tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].leftX != 0) {
+			DrawBox(MAPW_START_WIDTH + MAP_SELL_LENGTH * ((this->helf_w + this->x) / MAP_SELL_LENGTH + tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].leftX),
+				MAPW_START_HEIGHT + MAP_SELL_LENGTH * ((this->helf_h + this->y) / MAP_SELL_LENGTH),
+				MAPW_END_WIDTH + MAP_SELL_LENGTH * ((this->helf_w + this->x) / MAP_SELL_LENGTH + tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].leftX),
+				MAPW_END_HEIGHT + MAP_SELL_LENGTH * ((this->helf_h + this->y) / MAP_SELL_LENGTH), this->color_yellow, TRUE);
+		}
+		if (tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].rightX != 0) {
+			DrawBox(MAPW_START_WIDTH + MAP_SELL_LENGTH * ((this->helf_w + this->x) / MAP_SELL_LENGTH + tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].rightX),
+				MAPW_START_HEIGHT + MAP_SELL_LENGTH * ((this->helf_h + this->y) / MAP_SELL_LENGTH),
+				MAPW_END_WIDTH + MAP_SELL_LENGTH * ((this->helf_w + this->x) / MAP_SELL_LENGTH + tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].rightX),
+				MAPW_END_HEIGHT + MAP_SELL_LENGTH * ((this->helf_h + this->y) / MAP_SELL_LENGTH), this->color_yellow, TRUE);
+		}
+		if (tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].upY != 0) {
+			DrawBox(MAPW_START_WIDTH + MAP_SELL_LENGTH * ((this->helf_w + this->x) / MAP_SELL_LENGTH),
+				MAPW_START_HEIGHT + MAP_SELL_LENGTH * ((this->helf_h + this->y) / MAP_SELL_LENGTH + tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].upY),
+				MAPW_END_WIDTH + MAP_SELL_LENGTH * ((this->helf_w + this->x) / MAP_SELL_LENGTH),
+				MAPW_END_HEIGHT + MAP_SELL_LENGTH * ((this->helf_h + this->y) / MAP_SELL_LENGTH + tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].upY),
+				this->color_yellow, TRUE);
+		}
+		if (tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].downY != 0) {
+			DrawBox(MAPW_START_WIDTH + MAP_SELL_LENGTH * ((this->helf_w + this->x) / MAP_SELL_LENGTH),
+				MAPW_START_HEIGHT + MAP_SELL_LENGTH * ((this->helf_h + this->y) / MAP_SELL_LENGTH+tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].downY),
+				MAPW_END_WIDTH + MAP_SELL_LENGTH * ((this->helf_w + this->x) / MAP_SELL_LENGTH),
+				MAPW_END_HEIGHT + MAP_SELL_LENGTH * ((this->helf_h + this->y) / MAP_SELL_LENGTH+ tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].downY),
+				this->color_yellow, TRUE);
+		}
+	}
 }
 
 void Player::Action() {
@@ -56,10 +84,42 @@ void Player::Action() {
 		if (y > -MAP_MAX_LENGTHXY)this->y--;
 	}
 	if (this->input.keyState[KEY_INPUT_SPACE]) { //キー「SPACE」を押下しているとき
-		this->data = { (this->helf_w + this->x) / MAP_SELL_LENGTH ,(this->helf_h + this->y) / MAP_SELL_LENGTH, Action_SPACE, this->cropNum, this->toolNum, this->score};
+		this->dataVec.push_back({ (this->helf_w + this->x) / MAP_SELL_LENGTH ,(this->helf_h + this->y) / MAP_SELL_LENGTH, Action_SPACE, this->cropNum, this->toolNum, this->score });
+		if (tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].leftX != 0) {
+			this->dataVec.push_back({ (this->helf_w + this->x) / MAP_SELL_LENGTH + tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].leftX 
+				,(this->helf_h + this->y) / MAP_SELL_LENGTH,
+				Action_SPACE,
+				this->cropNum,
+				this->toolNum,
+				0 });
+		}
+		if (tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].rightX != 0) {
+			this->dataVec.push_back({ (this->helf_w + this->x) / MAP_SELL_LENGTH + tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].rightX
+				,(this->helf_h + this->y) / MAP_SELL_LENGTH,
+				Action_SPACE,
+				this->cropNum,
+				this->toolNum,
+				0 });
+		}
+		if (tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].upY != 0) {
+			this->dataVec.push_back({ (this->helf_w + this->x) / MAP_SELL_LENGTH,
+				(this->helf_h + this->y) / MAP_SELL_LENGTH + tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].upY,
+				Action_SPACE,
+				this->cropNum,
+				this->toolNum,
+				0 });
+		}
+		if (tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].downY != 0) {
+			this->dataVec.push_back({ (this->helf_w + this->x) / MAP_SELL_LENGTH,
+				(this->helf_h + this->y) / MAP_SELL_LENGTH + tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].downY,
+				Action_SPACE,
+				this->cropNum,
+				this->toolNum,
+				0 });
+		}
 	}
 	if (this->input.keyState[KEY_INPUT_RETURN]) { //キー「RETURN」を押下しているとき
-		this->data = { (this->helf_w + this->x) / MAP_SELL_LENGTH ,(this->helf_h + this->y) / MAP_SELL_LENGTH, Action_RETURN, this->cropNum, this->toolNum, this->score };
+		this->dataVec.push_back({ (this->helf_w + this->x) / MAP_SELL_LENGTH ,(this->helf_h + this->y) / MAP_SELL_LENGTH, Action_RETURN, this->cropNum, this->toolNum, 0});
 	}
 	if (this->input.keyState[KEY_INPUT_E]) {//キー「E」を押下しているとき
 		this->toolNum= (this->toolNum+1) % Tool_MAX;
@@ -67,11 +127,14 @@ void Player::Action() {
 	if (this->input.keyState[KEY_INPUT_Q]) {//キー「Q」を押下しているとき
 		this->cropNum = (this->cropNum + 1) % this->maxCropNum;
 	}
+	if (this->input.keyState[KEY_INPUT_Z]) {//キー「Q」を押下しているとき
+		this->UpgradeTools(this->toolNum);
+	}
 }
 
 void Player::InitData() {
-	if (this->data.x!=-1&& this->data.y != -1) {
-		this->data = { -1,-1,-1,this->cropNum,-1, 0};
+	if (this->dataVec.size()>0||(this->dataVec[0].x != -1 && this->dataVec[0].y != -1)) {
+		this->dataVec = { { -1,-1,-1,this->cropNum,-1, 0} };
 	}
 }
 
@@ -94,14 +157,42 @@ void Player::DrawScore() {
 	DrawFormatString(20, 70, this->color_white, std::to_string(score).c_str());
 }
 
-void Player::SetScore(int score) {
-	this->score = this->score + score;
+void Player::DrawTools() {
+	for (int i = 0; i < Tool_MAX; i++) {
+		if (tool_PicData[i].toolLevel < tool_PicData[i].maxLevel && tool_PicData[i].toolUpgradeData[tool_PicData[i].toolLevel].upgrade_cost < this->score) {
+			DrawBox(0, 150 + (i * 50), 100, 200 + (i * 50), this->color_yellow, TRUE);
+		}
+		else {
+			DrawBox(0, 150 + (i * 50), 100, 200 + (i * 50), this->color_white, TRUE);
+		}
+		DrawBox(5, 155 + (i * 50), 95, 195 + (i * 50), this->color_black, TRUE);
+		this->animaVec[i].DrawAnima(5, 155 + (i * 50), 45, 195 + (i * 50));
+		DrawFormatString(50, 155 + (i * 50), this->color_white, ("LV:"+std::to_string(tool_PicData[i].toolLevel + 1)).c_str());
+		DrawFormatString(50, 175 + (i * 50), this->color_white, std::to_string(tool_PicData[i].toolUpgradeData[tool_PicData[i].toolLevel].upgrade_cost).c_str());
+	}
 }
 
+/*
+void Player::SetScore() {
+	for (int i = 0; i < this->dataVec.size(); i++) {
+		this->score = this->score + this->dataVec[i].score;
+	}
+}
+*/
 void Player::SetMaxCropNum(int maxCropNum) {
 	this->maxCropNum = maxCropNum;
 }
-
+/*
 void Player::PayCost(int cost) {
 	this->score = this->score - cost;
+}
+*/
+
+void Player::UpgradeTools(int toolNum) {
+	if (tool_PicData[toolNum].toolLevel<tool_PicData[toolNum].maxLevel) {
+		if (tool_PicData[toolNum].toolUpgradeData[tool_PicData[toolNum].toolLevel].upgrade_cost < this->score) {
+			this->score = this->score - tool_PicData[toolNum].toolUpgradeData[tool_PicData[toolNum].toolLevel].upgrade_cost;
+			tool_PicData[toolNum].toolLevel++;
+		}
+	}
 }

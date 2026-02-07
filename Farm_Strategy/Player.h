@@ -32,14 +32,16 @@ public:
 	~Player();
 	void Update(); //プレイヤーの更新
 	void DrawPlayer(); //プレイヤーの表示
-	void DrawScore();
+	void DrawScore(); //スコアの表示
+	void DrawTools(); //ツールの表示
 	void Action(); //入力による行動選択
 	void InitData(); //Dataの初期化
 	void LoadToolGraph(); //ツールの画像ロード
-	void SetScore(int score); //Actionの結果得られるスコアを設定
-	void GetCropNum(int cropNum); //作物番号の取得
+	//void SetScore(); //Actionの結果得られるスコアを設定
+	//void GetCropNum(int cropNum); //作物番号の取得
 	void SetMaxCropNum(int maxCropNum); //最大作物番号を設定
-	void PayCost(int cost); //コストの支払い
+	//void PayCost(int cost); //コストの支払い
+	void UpgradeTools(int toolNum); //ツールのアップグレード
 
 public:
 	int score;
@@ -52,9 +54,9 @@ public:
 	unsigned int color_yellow; //黄色
 	unsigned int color_black; //黒色
 	unsigned int color_white; //白色
-	int maxCropNum;
-	int cropNum;
+	int maxCropNum; //最大作物番号
+	int cropNum; //今の作物番号
 	Input input; //入力クラス
-	RETURN_DATA data; //プレイヤーから渡すアクションの情報
+	std::vector<RETURN_DATA> dataVec; //プレイヤーから渡すアクションの情報
 	std::vector<Animation> animaVec;
 };

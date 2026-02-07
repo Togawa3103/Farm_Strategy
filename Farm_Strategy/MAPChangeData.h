@@ -7,12 +7,12 @@ enum {
 };
 
 
-struct RETURN_DATA
+typedef struct RETURN_DATA
 {
 	int x;
 	int y;
 	int actionFlag;
 	int cropNum;
 	int toolNum;
-	int score;
+	int returnScore;
 } ;
