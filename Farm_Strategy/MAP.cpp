@@ -97,6 +97,8 @@ void MAP::GetMAPChangeData(int *playerScore,RETURN_DATA *data) {
 						this->cropVec.push_back(crop);
 						//this->cost = crop_PicData[(*data).cropNum].cost;
 						*playerScore -= crop_PicData[(*data).cropNum].cost;
+						this->sound.LoadSound("Sound/シャベルで穴掘り.mp3");
+						this->sound.PlayBGMSound();
 					}
 					break;
 				}
@@ -111,6 +113,8 @@ void MAP::GetMAPChangeData(int *playerScore,RETURN_DATA *data) {
 					if (this->cropVec[i].x == (*data).x) {
 						if (this->cropVec[i].y == (*data).y) {
 							this->cropVec[i].time = this->cropVec[i].time + 10;
+							this->sound.LoadSound("Sound/水ちょろちょろ.mp3");
+							this->sound.PlayBGMSound();
 						}
 					}
 				}
@@ -125,6 +129,8 @@ void MAP::GetMAPChangeData(int *playerScore,RETURN_DATA *data) {
 					//(*data).returnScore = ReturnScore((*data).x, (*data).y);
 					*playerScore += ReturnScore((*data).x, (*data).y);
 					this->DeleteCROP((*data).x, (*data).y);
+					this->sound.LoadSound("Sound/ラップをちぎる.mp3");
+					this->sound.PlayBGMSound();
 					break;
 				}
 			}

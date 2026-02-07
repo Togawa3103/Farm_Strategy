@@ -8,6 +8,6 @@ public:
 public:
 	Input();
 	~Input();
-	void Update(); //キー入力更新
+	void Update(int toolNum); //キー入力更新
 	void InitInput(); //入力初期化
 };

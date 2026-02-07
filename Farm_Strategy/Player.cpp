@@ -24,7 +24,7 @@ Player::~Player() {
 void Player::Update() {
 	this->InitData();
 	this->input.InitInput();
-	this->input.Update();
+	this->input.Update(this->toolNum);
 	this->animaVec[this->toolNum].Update();
 	this->Action();
 }
@@ -122,12 +122,12 @@ void Player::Action() {
 		this->dataVec.push_back({ (this->helf_w + this->x) / MAP_SELL_LENGTH ,(this->helf_h + this->y) / MAP_SELL_LENGTH, Action_RETURN, this->cropNum, this->toolNum, 0});
 	}
 	if (this->input.keyState[KEY_INPUT_E]) {//キー「E」を押下しているとき
-		this->toolNum= (this->toolNum+1) % Tool_MAX;
+		this->SetNextToolNum();
 	}
 	if (this->input.keyState[KEY_INPUT_Q]) {//キー「Q」を押下しているとき
-		this->cropNum = (this->cropNum + 1) % this->maxCropNum;
+		this->SetNextCropNum();
 	}
-	if (this->input.keyState[KEY_INPUT_Z]) {//キー「Q」を押下しているとき
+	if (this->input.keyState[KEY_INPUT_Z]) {//キー「Z」を押下しているとき
 		this->UpgradeTools(this->toolNum);
 	}
 }
@@ -188,11 +188,29 @@ void Player::PayCost(int cost) {
 }
 */
 
-void Player::UpgradeTools(int toolNum) {
+int Player::UpgradeTools(int toolNum) {
 	if (tool_PicData[toolNum].toolLevel<tool_PicData[toolNum].maxLevel) {
 		if (tool_PicData[toolNum].toolUpgradeData[tool_PicData[toolNum].toolLevel].upgrade_cost < this->score) {
 			this->score = this->score - tool_PicData[toolNum].toolUpgradeData[tool_PicData[toolNum].toolLevel].upgrade_cost;
 			tool_PicData[toolNum].toolLevel++;
+			this->sound.LoadSound("Sound/決定ボタンを押す40.mp3");
+			this->sound.PlayBGMSound();
+			return 0;
 		}
 	}
+	this->sound.LoadSound("Sound/ビープ音4.mp3");
+	this->sound.PlayBGMSound();
+	return -1;
+}
+
+void Player::SetNextCropNum() {
+	this->cropNum = (this->cropNum + 1) % this->maxCropNum;
+	this->sound.LoadSound("Sound/カーソル移動2.mp3");
+	this->sound.PlayBGMSound();
+}
+
+void Player::SetNextToolNum() {
+	this->toolNum = (this->toolNum + 1) % Tool_MAX; 
+	this->sound.LoadSound("Sound/カーソル移動1.mp3");
+	this->sound.PlayBGMSound();
 }

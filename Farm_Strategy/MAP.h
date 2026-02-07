@@ -2,6 +2,7 @@
 #include"DxLib.h"
 #include"MAPChangeData.h"
 #include"Crop.h"
+#include"Sound.h"
 #include<vector>
 
 #define WIDTH 40
@@ -39,6 +40,7 @@ public:
 public:
 	std::vector<CROP> cropVec; //すべての作物
 	std::vector<Animation> animaVec; //すべての作物のアニメーション
+	Sound sound;
 	int map[WIDTH][HEIGHT]; //マップの情報
 	int maxCropNum;
 	unsigned int color_black; //黒色

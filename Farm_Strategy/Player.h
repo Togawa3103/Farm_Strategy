@@ -4,6 +4,7 @@
 #include"MAPChangeData.h"
 #include"Tool.h"
 #include"Animation.h"
+#include"Sound.h"
 
 #define WIDTH 40
 #define HEIGHT 40
@@ -41,8 +42,9 @@ public:
 	//void GetCropNum(int cropNum); //作物番号の取得
 	void SetMaxCropNum(int maxCropNum); //最大作物番号を設定
 	//void PayCost(int cost); //コストの支払い
-	void UpgradeTools(int toolNum); //ツールのアップグレード
-
+	int UpgradeTools(int toolNum); //ツールのアップグレード
+	void SetNextCropNum(); //作物の変更
+	void SetNextToolNum(); //ツールの変更
 public:
 	int score;
 	int toolNum; //ツール番号
@@ -57,6 +59,7 @@ public:
 	int maxCropNum; //最大作物番号
 	int cropNum; //今の作物番号
 	Input input; //入力クラス
+	Sound sound;
 	std::vector<RETURN_DATA> dataVec; //プレイヤーから渡すアクションの情報
 	std::vector<Animation> animaVec;
 };
