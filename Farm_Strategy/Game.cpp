@@ -1,4 +1,5 @@
 #include"Game.h"
+#include"SE_Data.h"
 
 Game::Game() {
 	this->fps= 144;
@@ -15,17 +16,22 @@ Game::Game() {
 	SetTransColor(182, 185, 184); //グラフィックで透明色にする色をセット
 
 	ClearDrawScreen(); //画面に描画されたものを消去する
+
+	this->gameMode = -1;
 }
 
-Game::~Game() {}
+Game::~Game() {
+	this->gameMode = 0;
+}
 
 void Game::Update() {
-	this->player.Update();	
+	this->player.Update(this->map.map);	
 	this->time.Update();
 	this->map.Update(&(this->player.score),this->player.dataVec);
 	//this->player.SetScore();
 	//this->player.PayCost(this->map.cost);
 }
+
 
 void Game::Draw() {
 	this->time.DrawTime(this->time.time);
@@ -38,4 +44,14 @@ void Game::Init() {
 	this->map.LoadCropGraph();
 	this->player.LoadToolGraph();
 	this->player.SetMaxCropNum(this->map.maxCropNum);
+	this->LoadSE();
+}
+
+void Game::LoadSE() {
+	for (int i = 0; i < SE_MAX; i++) {
+		se[i].seSoundHandle = LoadSoundMem(se[i].seName);
+		ChangeVolumeSoundMem(100, se[i].seSoundHandle);
+	}
+	this->map.se = se;
+	this->player.se = se;
 }

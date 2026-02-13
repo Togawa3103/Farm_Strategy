@@ -15,22 +15,17 @@ MAP::MAP() {
 	
 	this->cropVec.clear();
 	for (int i = 0; i < crop_PicData.size(); i++) {
-		//std::vector<ANIMATION_DATA> anima(crop_PicData[i].maxGrowth);
-		//this->animaVec(crop_PicData[i].maxGrowth);
 		for (int j = 0; j < crop_PicData[i].maxGrowth;j++) {
 			Animation anima;
 			this->animaVec.push_back(anima);
 		}
 	}
-	//this->score = 0;
 	this->maxCropNum = crop_PicData.size();
 }
 
 MAP::~MAP() {}
 
 void MAP::Update(int* playerScore,std::vector<RETURN_DATA>& dataVec) {
-	//this->score = 0;
-	//this->cost = 0;
 	for (int i = 0; i < dataVec.size();i++) {
 		this->GetMAPChangeData(playerScore,&dataVec[i]);
 	}
@@ -45,10 +40,6 @@ void MAP::DrawMAP() {
 					MAPW_END_WIDTH + MAP_SELL_LENGTH * i, MAPW_END_HEIGHT + MAP_SELL_LENGTH * j, this->color_white, TRUE);
 		
 			switch (this->map[i][j]) {
-			//case 1:
-			//	DrawBox(MAPB_START_WIDTH + MAP_SELL_LENGTH * i, MAPB_START_HEIGHT + MAP_SELL_LENGTH * j,
-			//		MAPB_END_WIDTH + MAP_SELL_LENGTH * i, MAPB_END_HEIGHT + MAP_SELL_LENGTH * j, this->color_red, TRUE);
-			//	break;
 			case 0:
 				DrawBox(MAPB_START_WIDTH + MAP_SELL_LENGTH * i, MAPB_START_HEIGHT + MAP_SELL_LENGTH * j,
 					MAPB_END_WIDTH + MAP_SELL_LENGTH * i, MAPB_END_HEIGHT + MAP_SELL_LENGTH * j, this->color_black, TRUE);
@@ -58,9 +49,6 @@ void MAP::DrawMAP() {
 	}
 	if (this->cropVec.size()>0) {
 		for (int i = 0; i < this->cropVec.size(); i++) {
-			//DrawExtendGraph(MAPB_START_WIDTH + MAP_SELL_LENGTH * this->cropVec[i].x, MAPB_START_HEIGHT + MAP_SELL_LENGTH * this->cropVec[i].y,
-			//		MAPB_END_WIDTH + MAP_SELL_LENGTH * this->cropVec[i].x, MAPB_END_HEIGHT + MAP_SELL_LENGTH * this->cropVec[i].y,
-			//		this->cropVec[i].cropPicHandle, TRUE);
 			this->cropVec[i].DrawCrop(MAPB_START_WIDTH + MAP_SELL_LENGTH * this->cropVec[i].x,
 				MAPB_START_HEIGHT + MAP_SELL_LENGTH * this->cropVec[i].y,
 				MAPB_END_WIDTH + MAP_SELL_LENGTH * this->cropVec[i].x,
@@ -72,7 +60,7 @@ void MAP::DrawMAP() {
 void MAP::DrawNumCrop(int cropNum) {
 	DrawBox(0, 100, 50, 140, this->color_white, TRUE);
 	DrawBox(5, 95, 45, 135, this->color_black, TRUE);
-	this->animaVec[crop_PicData[cropNum].startCropVecNum + crop_PicData[cropNum].maxGrowth-1].DrawAnima(5, 95,45,135);
+	crop_PicData[cropNum].AnimaVec[crop_PicData[cropNum].maxGrowth - 1].DrawAnima(5, 95, 45, 135);
 }
 
 void MAP::GetMAPChangeData(int *playerScore,RETURN_DATA *data) {
@@ -87,18 +75,23 @@ void MAP::GetMAPChangeData(int *playerScore,RETURN_DATA *data) {
 					//農地に作物がないとき
 				case 0:
 				{
-					if ((*playerScore) >= crop_PicData[(*data).cropNum].cost) {
+					int cropNum = (*data).cropNum;
+					int cost = crop_PicData[cropNum].cost;
+					if ((*playerScore) >= cost) {
+						//マップの更新
 						this->map[(*data).x][(*data).y] = 1;
-						CROP crop((*data).x, (*data).y, (*data).cropNum, crop_PicData[(*data).cropNum].maxGrowth, crop_PicData[(*data).cropNum].score, crop_PicData[(*data).cropNum].cropPicDataVec[(*data).cropNum].cropPicHandle);
+						
+						//作物の作成
+						CROP crop((*data).x, (*data).y, cropNum, crop_PicData[cropNum].maxGrowth, crop_PicData[cropNum].score, crop_PicData[cropNum].cropPicDataVec[cropNum].cropPicHandle);
 						int count = 0;
-						for (int j = 0; j < crop_PicData[(*data).cropNum].maxGrowth; j++) {
-							crop.anima.push_back(this->animaVec[crop_PicData[(*data).cropNum].startCropVecNum + j]);
-						}
+						crop.anima = crop_PicData[cropNum].AnimaVec;
 						this->cropVec.push_back(crop);
-						//this->cost = crop_PicData[(*data).cropNum].cost;
-						*playerScore -= crop_PicData[(*data).cropNum].cost;
-						this->sound.LoadSound("Sound/シャベルで穴掘り.mp3");
-						this->sound.PlayBGMSound();
+
+						//コストの支払い
+						if(cost>0)*playerScore -= crop_PicData[cropNum].cost;
+						
+						//SE再生
+						this->sound.PlayBGMSound(se[SE_HOE].seSoundHandle);
 					}
 					break;
 				}
@@ -112,9 +105,11 @@ void MAP::GetMAPChangeData(int *playerScore,RETURN_DATA *data) {
 				for (int i = this->cropVec.size() - 1; i >= 0; i--) {
 					if (this->cropVec[i].x == (*data).x) {
 						if (this->cropVec[i].y == (*data).y) {
-							this->cropVec[i].time = this->cropVec[i].time + 10;
-							this->sound.LoadSound("Sound/水ちょろちょろ.mp3");
-							this->sound.PlayBGMSound();
+							//作物の成長度を加算
+							this->cropVec[i].time = this->cropVec[i].time + 20;
+
+							//SE再生
+							this->sound.PlayBGMSound(se[SE_WATERCAN].seSoundHandle);
 						}
 					}
 				}
@@ -126,21 +121,16 @@ void MAP::GetMAPChangeData(int *playerScore,RETURN_DATA *data) {
 				case 0:
 					break;
 				case 1:
-					//(*data).returnScore = ReturnScore((*data).x, (*data).y);
+					//作物の採取
 					*playerScore += ReturnScore((*data).x, (*data).y);
 					this->DeleteCROP((*data).x, (*data).y);
-					this->sound.LoadSound("Sound/ラップをちぎる.mp3");
-					this->sound.PlayBGMSound();
+					
+					//SE再生
+					this->sound.PlayBGMSound(se[SE_SCISSORS].seSoundHandle);
 					break;
 				}
 			}
 			break;
-		//リターン(エンター)キーが押されたとき
-		/*case Action_RETURN:
-			(*data).score = ReturnScore((*data).x, (*data).y);
-			this->DeleteCROP((*data).x, (*data).y);
-			break;
-		*/
 		}
 		
 	}
@@ -166,12 +156,16 @@ void MAP::DeleteCROP(int x, int y) {
 
 void MAP::LoadCropGraph() {
 	for (int i = 0; i < crop_PicData.size(); i++) {
+		std::vector<Animation> anima(crop_PicData[i].maxGrowth);
 		for (int j = 0; j < crop_PicData[i].cropPicDataVec.size(); j++) {
 			crop_PicData[i].cropPicDataVec[j].cropPicHandle = LoadGraph(crop_PicData[i].cropPicDataVec[j].cropPicName);
 			ANIMATION_DATA animaData = { crop_PicData[i].cropPicDataVec[j].startFrame, crop_PicData[i].cropPicDataVec[j].endFrame,
 				crop_PicData[i].cropPicDataVec[j].cropPicHandle };
-			this->animaVec[crop_PicData[i].cropPicDataVec[j].cropGrow + crop_PicData[i].startCropVecNum].anima.push_back(animaData);
+			//this->animaVec[crop_PicData[i].cropPicDataVec[j].cropGrow + crop_PicData[i].startCropVecNum].anima.push_back(animaData);
+			//crop_PicData[i].AnimaVec.anima.push_back(animaData);
+			anima[crop_PicData[i].cropPicDataVec[j].cropGrow].anima.push_back(animaData);
 		}
+		crop_PicData[i].AnimaVec = anima;
 	}
 }
 

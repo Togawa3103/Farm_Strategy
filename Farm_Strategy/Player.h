@@ -31,11 +31,14 @@ class Player {
 public:
 	Player();
 	~Player();
-	void Update(); //プレイヤーの更新
+	void Update(int map[][HEIGHT]); //プレイヤーの更新
+	void Update_StartMenu(int maxGameMode, int* selected_GameMode,int *gameMode); //スタートメニューのプレイヤーの更新
+
 	void DrawPlayer(); //プレイヤーの表示
 	void DrawScore(); //スコアの表示
 	void DrawTools(); //ツールの表示
-	void Action(); //入力による行動選択
+	void Action(int map[][HEIGHT]); //入力による行動選択
+	void Action_StartMenu(int maxGameMode, int * selected_GameMode, int* gameMode); //スタートメニューの入力による行動選択
 	void InitData(); //Dataの初期化
 	void LoadToolGraph(); //ツールの画像ロード
 	//void SetScore(); //Actionの結果得られるスコアを設定
@@ -45,6 +48,7 @@ public:
 	int UpgradeTools(int toolNum); //ツールのアップグレード
 	void SetNextCropNum(); //作物の変更
 	void SetNextToolNum(); //ツールの変更
+
 public:
 	int score;
 	int toolNum; //ツール番号
@@ -60,6 +64,7 @@ public:
 	int cropNum; //今の作物番号
 	Input input; //入力クラス
 	Sound sound;
+	SE* se;
 	std::vector<RETURN_DATA> dataVec; //プレイヤーから渡すアクションの情報
 	std::vector<Animation> animaVec;
 };

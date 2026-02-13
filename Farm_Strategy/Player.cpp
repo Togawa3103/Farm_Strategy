@@ -21,12 +21,12 @@ Player::Player() {
 Player::~Player() {
 }
 
-void Player::Update() {
+void Player::Update(int map[][HEIGHT]) {
 	this->InitData();
 	this->input.InitInput();
 	this->input.Update(this->toolNum);
 	this->animaVec[this->toolNum].Update();
-	this->Action();
+	this->Action(map);
 }
 
 void Player::DrawPlayer() {
@@ -40,37 +40,49 @@ void Player::DrawPlayer() {
 		MAPW_START_HEIGHT + MAP_SELL_LENGTH * ((this->helf_h + this->y) / MAP_SELL_LENGTH),
 		MAPW_END_WIDTH + MAP_SELL_LENGTH * ((this->helf_w + this->x) / MAP_SELL_LENGTH),
 		MAPW_END_HEIGHT + MAP_SELL_LENGTH * ((this->helf_h + this->y) / MAP_SELL_LENGTH), this->color_yellow, TRUE); 
-	for (int i = 1; i < 5; i++) {
-		if (tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].leftX != 0) {
-			DrawBox(MAPW_START_WIDTH + MAP_SELL_LENGTH * ((this->helf_w + this->x) / MAP_SELL_LENGTH + tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].leftX),
-				MAPW_START_HEIGHT + MAP_SELL_LENGTH * ((this->helf_h + this->y) / MAP_SELL_LENGTH),
-				MAPW_END_WIDTH + MAP_SELL_LENGTH * ((this->helf_w + this->x) / MAP_SELL_LENGTH + tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].leftX),
-				MAPW_END_HEIGHT + MAP_SELL_LENGTH * ((this->helf_h + this->y) / MAP_SELL_LENGTH), this->color_yellow, TRUE);
-		}
-		if (tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].rightX != 0) {
-			DrawBox(MAPW_START_WIDTH + MAP_SELL_LENGTH * ((this->helf_w + this->x) / MAP_SELL_LENGTH + tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].rightX),
-				MAPW_START_HEIGHT + MAP_SELL_LENGTH * ((this->helf_h + this->y) / MAP_SELL_LENGTH),
-				MAPW_END_WIDTH + MAP_SELL_LENGTH * ((this->helf_w + this->x) / MAP_SELL_LENGTH + tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].rightX),
-				MAPW_END_HEIGHT + MAP_SELL_LENGTH * ((this->helf_h + this->y) / MAP_SELL_LENGTH), this->color_yellow, TRUE);
-		}
-		if (tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].upY != 0) {
-			DrawBox(MAPW_START_WIDTH + MAP_SELL_LENGTH * ((this->helf_w + this->x) / MAP_SELL_LENGTH),
-				MAPW_START_HEIGHT + MAP_SELL_LENGTH * ((this->helf_h + this->y) / MAP_SELL_LENGTH + tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].upY),
-				MAPW_END_WIDTH + MAP_SELL_LENGTH * ((this->helf_w + this->x) / MAP_SELL_LENGTH),
-				MAPW_END_HEIGHT + MAP_SELL_LENGTH * ((this->helf_h + this->y) / MAP_SELL_LENGTH + tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].upY),
-				this->color_yellow, TRUE);
-		}
-		if (tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].downY != 0) {
-			DrawBox(MAPW_START_WIDTH + MAP_SELL_LENGTH * ((this->helf_w + this->x) / MAP_SELL_LENGTH),
-				MAPW_START_HEIGHT + MAP_SELL_LENGTH * ((this->helf_h + this->y) / MAP_SELL_LENGTH+tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].downY),
-				MAPW_END_WIDTH + MAP_SELL_LENGTH * ((this->helf_w + this->x) / MAP_SELL_LENGTH),
-				MAPW_END_HEIGHT + MAP_SELL_LENGTH * ((this->helf_h + this->y) / MAP_SELL_LENGTH+ tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].downY),
-				this->color_yellow, TRUE);
+	
+	//ツールがアップグレードされているとき
+	if (tool_PicData[this->toolNum].toolLevel>0) {
+		for (int i = 1; i < 5; i++) {
+			if ((this->helf_w + this->x) / MAP_SELL_LENGTH > 0) {
+				if (tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].leftX != 0) {
+					DrawBox(MAPW_START_WIDTH + MAP_SELL_LENGTH * ((this->helf_w + this->x) / MAP_SELL_LENGTH + tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].leftX),
+						MAPW_START_HEIGHT + MAP_SELL_LENGTH * ((this->helf_h + this->y) / MAP_SELL_LENGTH),
+						MAPW_END_WIDTH + MAP_SELL_LENGTH * ((this->helf_w + this->x) / MAP_SELL_LENGTH + tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].leftX),
+						MAPW_END_HEIGHT + MAP_SELL_LENGTH * ((this->helf_h + this->y) / MAP_SELL_LENGTH), this->color_yellow, TRUE);
+				}
+			}
+			if ((this->helf_w + this->x) / MAP_SELL_LENGTH < WIDTH - 1) {
+				if (tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].rightX != 0) {
+					DrawBox(MAPW_START_WIDTH + MAP_SELL_LENGTH * ((this->helf_w + this->x) / MAP_SELL_LENGTH + tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].rightX),
+						MAPW_START_HEIGHT + MAP_SELL_LENGTH * ((this->helf_h + this->y) / MAP_SELL_LENGTH),
+						MAPW_END_WIDTH + MAP_SELL_LENGTH * ((this->helf_w + this->x) / MAP_SELL_LENGTH + tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].rightX),
+						MAPW_END_HEIGHT + MAP_SELL_LENGTH * ((this->helf_h + this->y) / MAP_SELL_LENGTH), this->color_yellow, TRUE);
+				}
+			}
+			if ((this->helf_h + this->y) / MAP_SELL_LENGTH > 0) {
+				if (tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].upY != 0) {
+					DrawBox(MAPW_START_WIDTH + MAP_SELL_LENGTH * ((this->helf_w + this->x) / MAP_SELL_LENGTH),
+						MAPW_START_HEIGHT + MAP_SELL_LENGTH * ((this->helf_h + this->y) / MAP_SELL_LENGTH + tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].upY),
+						MAPW_END_WIDTH + MAP_SELL_LENGTH * ((this->helf_w + this->x) / MAP_SELL_LENGTH),
+						MAPW_END_HEIGHT + MAP_SELL_LENGTH * ((this->helf_h + this->y) / MAP_SELL_LENGTH + tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].upY),
+						this->color_yellow, TRUE);
+				}
+			}
+			if ((this->helf_h + this->y) / MAP_SELL_LENGTH < HEIGHT - 1) {
+				if (tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].downY != 0) {
+					DrawBox(MAPW_START_WIDTH + MAP_SELL_LENGTH * ((this->helf_w + this->x) / MAP_SELL_LENGTH),
+						MAPW_START_HEIGHT + MAP_SELL_LENGTH * ((this->helf_h + this->y) / MAP_SELL_LENGTH + tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].downY),
+						MAPW_END_WIDTH + MAP_SELL_LENGTH * ((this->helf_w + this->x) / MAP_SELL_LENGTH),
+						MAPW_END_HEIGHT + MAP_SELL_LENGTH * ((this->helf_h + this->y) / MAP_SELL_LENGTH + tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].downY),
+						this->color_yellow, TRUE);
+				}
+			}
 		}
 	}
 }
 
-void Player::Action() {
+void Player::Action(int map[][HEIGHT]) {
 	if (this->input.keyState[KEY_INPUT_D]) { //キー「D」を押下しているとき
 		if(x< MAP_MAX_LENGTHXY -1)this->x++;
 	}
@@ -84,42 +96,73 @@ void Player::Action() {
 		if (y > -MAP_MAX_LENGTHXY)this->y--;
 	}
 	if (this->input.keyState[KEY_INPUT_SPACE]) { //キー「SPACE」を押下しているとき
-		this->dataVec.push_back({ (this->helf_w + this->x) / MAP_SELL_LENGTH ,(this->helf_h + this->y) / MAP_SELL_LENGTH, Action_SPACE, this->cropNum, this->toolNum, this->score });
-		if (tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].leftX != 0) {
-			this->dataVec.push_back({ (this->helf_w + this->x) / MAP_SELL_LENGTH + tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].leftX 
-				,(this->helf_h + this->y) / MAP_SELL_LENGTH,
-				Action_SPACE,
-				this->cropNum,
-				this->toolNum,
-				0 });
+		int playerX = (this->helf_w + this->x) / MAP_SELL_LENGTH;
+		int playerY = (this->helf_h + this->y) / MAP_SELL_LENGTH;
+		if (map[playerX][playerY] == (this->toolNum+1) / 2) {
+			//アクションデータの追加
+			this->dataVec.push_back({ playerX ,playerY, Action_SPACE, this->cropNum, this->toolNum, this->score });
 		}
-		if (tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].rightX != 0) {
-			this->dataVec.push_back({ (this->helf_w + this->x) / MAP_SELL_LENGTH + tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].rightX
-				,(this->helf_h + this->y) / MAP_SELL_LENGTH,
-				Action_SPACE,
-				this->cropNum,
-				this->toolNum,
-				0 });
+		if (playerX > 0) {
+			int toolPower = tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].leftX;//強化したツールで範囲が拡張されているか
+			if (toolPower != 0) {
+				if (map[playerX + toolPower][playerY] == (this->toolNum + 1) /2) {
+					//アクションデータの追加
+					this->dataVec.push_back({ playerX + toolPower,
+							playerY,
+							Action_SPACE,
+							this->cropNum,
+							this->toolNum,
+							0 });
+				}
+			}
 		}
-		if (tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].upY != 0) {
-			this->dataVec.push_back({ (this->helf_w + this->x) / MAP_SELL_LENGTH,
-				(this->helf_h + this->y) / MAP_SELL_LENGTH + tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].upY,
-				Action_SPACE,
-				this->cropNum,
-				this->toolNum,
-				0 });
+		if (playerX < WIDTH - 1) {
+			int toolPower = tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].rightX;//強化したツールで範囲が拡張されているか
+			if (toolPower != 0) {
+				if (map[playerX + toolPower][playerY] == (this->toolNum + 1) / 2) {
+					//アクションデータの追加
+					this->dataVec.push_back({ playerX + toolPower
+						,playerY,
+						Action_SPACE,
+						this->cropNum,
+						this->toolNum,
+						0 });
+				}
+			}
 		}
-		if (tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].downY != 0) {
-			this->dataVec.push_back({ (this->helf_w + this->x) / MAP_SELL_LENGTH,
-				(this->helf_h + this->y) / MAP_SELL_LENGTH + tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].downY,
-				Action_SPACE,
-				this->cropNum,
-				this->toolNum,
-				0 });
+		if (playerY > 0) {
+			int toolPower = tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].upY;//強化したツールで範囲が拡張されているか
+			if (toolPower != 0) {
+				if (map[playerX][playerY + toolPower] == (this->toolNum + 1) / 2) {
+					//アクションデータの追加
+					this->dataVec.push_back({ playerX,
+						playerY + toolPower,
+						Action_SPACE,
+						this->cropNum,
+						this->toolNum,
+						0 });
+				}
+			}
+		}
+		if (playerY< HEIGHT - 1) {
+			int toolPower = tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].downY;//強化したツールで範囲が拡張されているか
+			if (toolPower != 0) {
+				if (map[playerX][playerY + toolPower] == (this->toolNum + 1) / 2 ) {
+					//アクションデータの追加
+					this->dataVec.push_back({ playerX,
+						playerY + toolPower,
+						Action_SPACE,
+						this->cropNum,
+						this->toolNum,
+						0 });
+				}
+			}
 		}
 	}
 	if (this->input.keyState[KEY_INPUT_RETURN]) { //キー「RETURN」を押下しているとき
-		this->dataVec.push_back({ (this->helf_w + this->x) / MAP_SELL_LENGTH ,(this->helf_h + this->y) / MAP_SELL_LENGTH, Action_RETURN, this->cropNum, this->toolNum, 0});
+		int playerX = (this->helf_w + this->x) / MAP_SELL_LENGTH;
+		int playerY = (this->helf_h + this->y) / MAP_SELL_LENGTH;
+		this->dataVec.push_back({ playerX ,playerY, Action_RETURN, this->cropNum, this->toolNum, 0});
 	}
 	if (this->input.keyState[KEY_INPUT_E]) {//キー「E」を押下しているとき
 		this->SetNextToolNum();
@@ -172,45 +215,39 @@ void Player::DrawTools() {
 	}
 }
 
-/*
-void Player::SetScore() {
-	for (int i = 0; i < this->dataVec.size(); i++) {
-		this->score = this->score + this->dataVec[i].score;
-	}
-}
-*/
 void Player::SetMaxCropNum(int maxCropNum) {
 	this->maxCropNum = maxCropNum;
 }
-/*
-void Player::PayCost(int cost) {
-	this->score = this->score - cost;
-}
-*/
 
 int Player::UpgradeTools(int toolNum) {
 	if (tool_PicData[toolNum].toolLevel<tool_PicData[toolNum].maxLevel) {
 		if (tool_PicData[toolNum].toolUpgradeData[tool_PicData[toolNum].toolLevel].upgrade_cost < this->score) {
+			//ツールアップグレード
 			this->score = this->score - tool_PicData[toolNum].toolUpgradeData[tool_PicData[toolNum].toolLevel].upgrade_cost;
 			tool_PicData[toolNum].toolLevel++;
-			this->sound.LoadSound("Sound/決定ボタンを押す40.mp3");
-			this->sound.PlayBGMSound();
+
+			//SE再生
+			this->sound.PlayBGMSound(se[SE_UPGRADE].seSoundHandle);
 			return 0;
 		}
 	}
-	this->sound.LoadSound("Sound/ビープ音4.mp3");
-	this->sound.PlayBGMSound();
+
+	//SE再生
+	this->sound.PlayBGMSound(se[SE_UPGRADEMISS].seSoundHandle);
 	return -1;
 }
 
 void Player::SetNextCropNum() {
 	this->cropNum = (this->cropNum + 1) % this->maxCropNum;
-	this->sound.LoadSound("Sound/カーソル移動2.mp3");
-	this->sound.PlayBGMSound();
+	
+	//SE再生
+	this->sound.PlayBGMSound(se[SE_SELECTCROP].seSoundHandle);
 }
 
 void Player::SetNextToolNum() {
 	this->toolNum = (this->toolNum + 1) % Tool_MAX; 
-	this->sound.LoadSound("Sound/カーソル移動1.mp3");
-	this->sound.PlayBGMSound();
+	
+	//SE再生
+	this->sound.PlayBGMSound(se[SE_SELECTTOOL].seSoundHandle);
 }
+

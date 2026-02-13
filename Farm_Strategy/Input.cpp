@@ -35,3 +35,18 @@ void Input::InitInput() {
 	if(this->frame>50)this->frame = 0;
 }
 
+void Input::Update_StartMenu() {
+	GetHitKeyStateAll(this->keyState); //ƒL[“ü—ÍŽæ“¾
+	if (this->frame > 0) {
+		this->keyState[KEY_INPUT_W] = 0;
+		this->keyState[KEY_INPUT_S] = 0;
+		this->frame++;
+	}
+	else if (this->keyState[KEY_INPUT_W]) {
+		this->frame++;
+	}
+	else if (this->keyState[KEY_INPUT_S]) {
+		this->frame++;
+	}
+}
+

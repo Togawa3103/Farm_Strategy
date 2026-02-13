@@ -7,8 +7,8 @@ void Sound::LoadSound(const char* SoundName) {
 	ChangeVolumeSoundMem(100, this->soundHandle);
 }
 
-void Sound::PlayBGMSound() {
-	PlaySoundMem(this->soundHandle, DX_PLAYTYPE_BACK);
+void Sound::PlayBGMSound(int seHandel) {
+	PlaySoundMem(seHandel, DX_PLAYTYPE_BACK);
 }
 
 void Sound::StopSound() {

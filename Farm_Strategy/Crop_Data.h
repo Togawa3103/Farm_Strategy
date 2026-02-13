@@ -1,6 +1,6 @@
 #pragma once
 #include<vector>
-
+#include"Animation.h"
 typedef struct {
 	int cropGrow; //作物成長度
 	const char* cropPicName; //作物の画像名
@@ -17,4 +17,5 @@ typedef struct {
 	std::vector<CROP_DATA> cropPicDataVec; //作物データリスト
 	int cost;
 	int startCropVecNum;
+	std::vector<Animation> AnimaVec;
 }CROP_PIC;

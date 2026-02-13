@@ -10,4 +10,5 @@ public:
 	~Input();
 	void Update(int toolNum); //キー入力更新
 	void InitInput(); //入力初期化
+	void Update_StartMenu(); //キー入力更新
 };

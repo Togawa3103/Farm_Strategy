@@ -41,6 +41,7 @@ public:
 	std::vector<CROP> cropVec; //すべての作物
 	std::vector<Animation> animaVec; //すべての作物のアニメーション
 	Sound sound;
+	SE* se;
 	int map[WIDTH][HEIGHT]; //マップの情報
 	int maxCropNum;
 	unsigned int color_black; //黒色
