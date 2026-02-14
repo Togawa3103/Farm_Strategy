@@ -40,6 +40,8 @@ void Input::Update_StartMenu() {
 	if (this->frame > 0) {
 		this->keyState[KEY_INPUT_W] = 0;
 		this->keyState[KEY_INPUT_S] = 0;
+		this->keyState[KEY_INPUT_RETURN] = 0;
+
 		this->frame++;
 	}
 	else if (this->keyState[KEY_INPUT_W]) {
@@ -48,5 +50,26 @@ void Input::Update_StartMenu() {
 	else if (this->keyState[KEY_INPUT_S]) {
 		this->frame++;
 	}
+	else if (this->keyState[KEY_INPUT_RETURN]) {
+		this->frame++;
+	}
 }
 
+void Input::Update_ResultMenu() {
+	GetHitKeyStateAll(this->keyState); //ƒL[“ü—ÍŽæ“¾
+	if (this->frame > 0) {
+		this->keyState[KEY_INPUT_W] = 0;
+		this->keyState[KEY_INPUT_S] = 0;
+		this->keyState[KEY_INPUT_RETURN] = 0;
+		this->frame++;
+	}
+	else if (this->keyState[KEY_INPUT_W]) {
+		this->frame++;
+	}
+	else if (this->keyState[KEY_INPUT_S]) {
+		this->frame++;
+	}
+	else if (this->keyState[KEY_INPUT_RETURN]) {
+		this->frame++;
+	}
+}

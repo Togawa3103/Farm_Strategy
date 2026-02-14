@@ -7,13 +7,13 @@ void Player::Update_StartMenu(int maxGameMode, int * selected_GameMode,int*gameM
 }
 
 void Player::Action_StartMenu(int maxGameMode, int* selected_GameMode, int* gameMode) {
-	if (this->input.keyState[KEY_INPUT_W]) { //キー「D」を押下しているとき
+	if (this->input.keyState[KEY_INPUT_S]) { //キー「S」を押下しているとき
 		*selected_GameMode = (*selected_GameMode + 1) % maxGameMode;
 	}
-	if (this->input.keyState[KEY_INPUT_S]) { //キー「A」を押下しているとき
+	if (this->input.keyState[KEY_INPUT_W]) { //キー「W」を押下しているとき
 		*selected_GameMode = (*selected_GameMode + maxGameMode - 1) % maxGameMode;
 	}
-	if (this->input.keyState[KEY_INPUT_RETURN]) { //キー「A」を押下しているとき
+	if (this->input.keyState[KEY_INPUT_RETURN]) { //キー「RETURN」を押下しているとき
 		*gameMode = *selected_GameMode;
 	}
 }

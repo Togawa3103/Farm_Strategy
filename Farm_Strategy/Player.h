@@ -33,12 +33,17 @@ public:
 	~Player();
 	void Update(int map[][HEIGHT]); //プレイヤーの更新
 	void Update_StartMenu(int maxGameMode, int* selected_GameMode,int *gameMode); //スタートメニューのプレイヤーの更新
+	void Update_ResultMenu(int maxGameMode, int* selected_GameMode, int* gameMode); //リザルトメニューのプレイヤーの更新
 
 	void DrawPlayer(); //プレイヤーの表示
 	void DrawScore(); //スコアの表示
+	void DrawResult(); //スコアの表示
+
 	void DrawTools(); //ツールの表示
 	void Action(int map[][HEIGHT]); //入力による行動選択
 	void Action_StartMenu(int maxGameMode, int * selected_GameMode, int* gameMode); //スタートメニューの入力による行動選択
+	void Action_ResultMenu(int maxGameMode, int* selected_GameMode, int* gameMode); //リザルトメニューの入力による行動選択
+
 	void InitData(); //Dataの初期化
 	void LoadToolGraph(); //ツールの画像ロード
 	//void SetScore(); //Actionの結果得られるスコアを設定

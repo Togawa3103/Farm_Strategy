@@ -13,5 +13,9 @@ void Game::Game_MainLoop() {
 			Sleep(mfps - looptime);
 		}
 		end = now;
+		
+		if (this->time.time > this->time.endTime) {
+			break;
+		}
 	}
 }

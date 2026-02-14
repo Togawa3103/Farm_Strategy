@@ -4,7 +4,6 @@
 Game::Game() {
 	this->fps= 144;
 	this->mfps = 1000.f / fps;
-	this->game_Mode = 0;
 	this->end=0;
 	this->now=0;
 	this->looptime = 0;

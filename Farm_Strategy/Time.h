@@ -10,6 +10,7 @@ public:
 
 public:
 	int time; //時間カウント
+	int endTime; //終了時間
 	unsigned int color_black; //黒色
 	unsigned int color_white; //白色
 

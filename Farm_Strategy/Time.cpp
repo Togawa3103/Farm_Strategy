@@ -2,6 +2,7 @@
 
 Time::Time() {
 	this->time = 0;
+	this->endTime = 100;
 	this->color_white = GetColor(255, 255, 255);
 	this->color_black = GetColor(0, 0, 0);
 

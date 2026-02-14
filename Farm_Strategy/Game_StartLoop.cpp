@@ -7,7 +7,7 @@ void Game::Update_StartMenu(int* selected_GameMode, int* gameMode) {
 void Game::Game_StartLoop() {
 	unsigned int Comand_Cr1 = GetColor(255, 255, 255);
 	unsigned int Comand_Cr2 = GetColor(0, 0, 0);
-
+	this->gameMode = -1;
 	int selected_GameMode = 0;
 	while (ScreenFlip() == 0 && ProcessMessage() == 0 && ClearDrawScreen() == 0) {
 		this->Update_StartMenu(&selected_GameMode, &(this->gameMode)); //状態の更新
@@ -30,17 +30,17 @@ void Game::Game_StartLoop() {
 
 void Game::DrawStartMenu(unsigned int Color1, unsigned int Color2, int selectedMenu) {
 	//外枠の表示
-	DrawBox(200, 370, 350, 500, Color1, TRUE);
-	DrawBox(210, 380, 340, 490, Color2, TRUE);
+	DrawBox(340, 370, 460, 530, Color1, TRUE);
+	DrawBox(345, 380, 455, 520, Color2, TRUE);
 
 	//選択肢の表示
 	for (int i = 0; i < StartMenu_Max; i++) {
 		if (selectedMenu == i) {
-			DrawBox(215, 385 + 40 * i, 335, 425 + 40 * i, Color1, TRUE);
-			DrawFormatString(220, 390 + 45 * i, Color2, start[i].startmenu_name);
+			DrawBox(365, 385 + 40 * i, 445, 425 + 40 * i, Color1, TRUE);
+			DrawFormatString(370, 390 + 45 * i, Color2, start[i].menu_name);
 		}
 		else {
-			DrawFormatString(220, 390 + 45 * i, Color1, start[i].startmenu_name);
+			DrawFormatString(370, 390 + 45 * i, Color1, start[i].menu_name);
 		}
 	}
 }
