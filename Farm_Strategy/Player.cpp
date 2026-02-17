@@ -3,11 +3,12 @@
 #include<string>
 
 Player::Player() {
+	this->playerNum = 1;
 	this->score = 0;
 	this->toolNum = 0;
 	this->x = 0;
 	this->y = 0;
-	this->dataVec = { { -1,-1,-1,this->cropNum,-1, 0} };
+	this->dataVec = { {this->playerNum, -1,-1,-1,this->cropNum,-1, 0} };
 	this->cropNum=0;
 	this->maxCropNum = maxCropNum;
 	this->helf_w = (WIDTH * MAP_SELL_LENGTH) / 2;
@@ -100,14 +101,14 @@ void Player::Action(int map[][HEIGHT]) {
 		int playerY = (this->helf_h + this->y) / MAP_SELL_LENGTH;
 		if (map[playerX][playerY] == (this->toolNum+1) / 2) {
 			//アクションデータの追加
-			this->dataVec.push_back({ playerX ,playerY, Action_SPACE, this->cropNum, this->toolNum, this->score });
+			this->dataVec.push_back({ this->playerNum ,playerX ,playerY, Action_SPACE, this->cropNum, this->toolNum, this->score });
 		}
 		if (playerX > 0) {
 			int toolPower = tool_PicData[this->toolNum].toolUpgradeData[tool_PicData[this->toolNum].toolLevel].leftX;//強化したツールで範囲が拡張されているか
 			if (toolPower != 0) {
 				if (map[playerX + toolPower][playerY] == (this->toolNum + 1) /2) {
 					//アクションデータの追加
-					this->dataVec.push_back({ playerX + toolPower,
+					this->dataVec.push_back({ this->playerNum, playerX + toolPower,
 							playerY,
 							Action_SPACE,
 							this->cropNum,
@@ -121,7 +122,7 @@ void Player::Action(int map[][HEIGHT]) {
 			if (toolPower != 0) {
 				if (map[playerX + toolPower][playerY] == (this->toolNum + 1) / 2) {
 					//アクションデータの追加
-					this->dataVec.push_back({ playerX + toolPower
+					this->dataVec.push_back({ this->playerNum,playerX + toolPower
 						,playerY,
 						Action_SPACE,
 						this->cropNum,
@@ -135,7 +136,7 @@ void Player::Action(int map[][HEIGHT]) {
 			if (toolPower != 0) {
 				if (map[playerX][playerY + toolPower] == (this->toolNum + 1) / 2) {
 					//アクションデータの追加
-					this->dataVec.push_back({ playerX,
+					this->dataVec.push_back({ this->playerNum, playerX,
 						playerY + toolPower,
 						Action_SPACE,
 						this->cropNum,
@@ -149,7 +150,7 @@ void Player::Action(int map[][HEIGHT]) {
 			if (toolPower != 0) {
 				if (map[playerX][playerY + toolPower] == (this->toolNum + 1) / 2 ) {
 					//アクションデータの追加
-					this->dataVec.push_back({ playerX,
+					this->dataVec.push_back({ this->playerNum,playerX,
 						playerY + toolPower,
 						Action_SPACE,
 						this->cropNum,
@@ -162,7 +163,7 @@ void Player::Action(int map[][HEIGHT]) {
 	if (this->input.keyState[KEY_INPUT_RETURN]) { //キー「RETURN」を押下しているとき
 		int playerX = (this->helf_w + this->x) / MAP_SELL_LENGTH;
 		int playerY = (this->helf_h + this->y) / MAP_SELL_LENGTH;
-		this->dataVec.push_back({ playerX ,playerY, Action_RETURN, this->cropNum, this->toolNum, 0});
+		this->dataVec.push_back({ this->playerNum, playerX ,playerY, Action_RETURN, this->cropNum, this->toolNum, 0});
 	}
 	if (this->input.keyState[KEY_INPUT_E]) {//キー「E」を押下しているとき
 		this->SetNextToolNum();
@@ -177,7 +178,7 @@ void Player::Action(int map[][HEIGHT]) {
 
 void Player::InitData() {
 	if (this->dataVec.size()>0||(this->dataVec[0].x != -1 && this->dataVec[0].y != -1)) {
-		this->dataVec = { { -1,-1,-1,this->cropNum,-1, 0} };
+		this->dataVec = { {this->playerNum, -1,-1,-1,this->cropNum,-1, 0} };
 	}
 }
 
@@ -195,8 +196,8 @@ void Player::LoadToolGraph() {
 }
 
 void Player::DrawScore() {
-	DrawBox(0, 50, 50, 100, this->color_white, TRUE);
-	DrawBox(5, 55, 45, 95, this->color_black, TRUE);
+	DrawBox(0, 50, 80, 100, this->color_white, TRUE);
+	DrawBox(5, 55, 75, 95, this->color_black, TRUE);
 	DrawFormatString(20, 70, this->color_white, std::to_string(score).c_str());
 }
 
@@ -251,3 +252,16 @@ void Player::SetNextToolNum() {
 	this->sound.PlayBGMSound(se[SE_SELECTTOOL].seSoundHandle);
 }
 
+void Player::InitPlayer() {
+	this->score = 0;
+	this->toolNum = 0;
+	this->x = 0;
+	this->y = 0;
+	this->dataVec = { {this->playerNum, -1,-1,-1,this->cropNum,-1, 0} };
+	this->cropNum = 0;
+	this->maxCropNum = maxCropNum;
+	this->input.frame = 0;
+	for (int i = 0; i < Tool_MAX;i++) {
+		tool_PicData[i].toolLevel = 0;
+	}
+}

@@ -7,10 +7,11 @@ void Game::Update_ResultMenu(int* selected_GameMode, int* gameMode) {
 void Game::Game_ResultLoop() {
 	unsigned int Comand_Cr1 = GetColor(255, 255, 255);
 	unsigned int Comand_Cr2 = GetColor(0, 0, 0);
-	this->gameMode = -1;
+	int gameMode = -1;
+	//this->gameMode = -1;
 	int selected_GameMode = 0;
 	while (ScreenFlip() == 0 && ProcessMessage() == 0 && ClearDrawScreen() == 0) {
-		this->Update_ResultMenu(&selected_GameMode, &(this->gameMode)); //状態の更新
+		this->Update_ResultMenu(&selected_GameMode, &(gameMode)); //状態の更新
 		this->DrawResult(Comand_Cr1, Comand_Cr2, selected_GameMode);
 
 		now = clock();
@@ -20,7 +21,8 @@ void Game::Game_ResultLoop() {
 		}
 		end = now;
 
-		if (this->gameMode > -1) {
+		if (gameMode > -1) {
+			this->gameMode = gameMode;
 			break;
 		}
 	}
@@ -34,8 +36,22 @@ void Game::DrawResult(unsigned int Color1, unsigned int Color2, int selectedMenu
 void Game::DrawResultMenu(unsigned int Color1, unsigned int Color2, int selectedMenu) {
 	//外枠の表示
 	DrawBox(340, 370, 460, 500, Color1, TRUE);
-	DrawBox(345, 380, 455, 495, Color2, TRUE);
-
+	DrawBox(345, 375, 455, 495, Color2, TRUE);
+	
+	//外枠の表示
+	DrawBox(340, 270, 460, 320, Color1, TRUE);
+	DrawBox(345, 275, 455, 315, Color2, TRUE);
+	if (this->gameMode== StartMenu_VS) {
+		if (this->player.score > this->npc.score) {
+			DrawFormatString(360, 285 , Color1, "勝ち！");
+		}
+		else if(this->player.score < this->npc.score){
+			DrawFormatString(360, 285, Color1, "負け！");
+		}
+		else if (this->player.score == this->npc.score) {
+			DrawFormatString(360, 285, Color1, "引き分け！");
+		}
+	}
 	//選択肢の表示
 	for (int i = 0; i < ResultMenu_Max; i++) {
 		if (selectedMenu == i) {

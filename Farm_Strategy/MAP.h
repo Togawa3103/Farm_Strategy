@@ -31,12 +31,13 @@ public:
 	void Update(int *playerScore, std::vector<RETURN_DATA>& dataVec); //マップの更新
 	void DrawMAP(); //マップの表示
 	void DrawNumCrop(int cropNum); //今の作物の表示
+	void DrawNPCNumCrop(int cropNum); //今の作物の表示
 	void GetMAPChangeData(int *playerScore,RETURN_DATA *data); //Playerが行動を起こした座標の取得
 	void UpdateCROP(); //すべての作物の更新
 	void DeleteCROP(int x,int y); //作物の削除
 	void LoadCropGraph(); //画像をロード
 	int ReturnScore(int x, int y); //画像をロード
-
+	void InitMAP(); //マップ情報の初期化
 public:
 	std::vector<CROP> cropVec; //すべての作物
 	std::vector<Animation> animaVec; //すべての作物のアニメーション

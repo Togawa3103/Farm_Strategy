@@ -8,7 +8,7 @@ public:
 public:
 	Input();
 	~Input();
-	void Update(int toolNum); //キー入力更新
+	virtual void Update(int toolNum); //キー入力更新
 	void InitInput(); //入力初期化
 	void Update_StartMenu(); //スタート画面のキー入力更新
 	void Update_ResultMenu(); //リザルト画面のキー入力更新

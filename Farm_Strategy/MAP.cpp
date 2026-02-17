@@ -25,6 +25,15 @@ MAP::MAP() {
 
 MAP::~MAP() {}
 
+void MAP::InitMAP() {
+	for (int i = 0; i < WIDTH; i++) {
+		for (int j = 0; j < HEIGHT; j++) {
+			this->map[i][j] = 0;
+		}
+	}
+	this->cropVec = {};
+}
+
 void MAP::Update(int* playerScore,std::vector<RETURN_DATA>& dataVec) {
 	for (int i = 0; i < dataVec.size();i++) {
 		this->GetMAPChangeData(playerScore,&dataVec[i]);
@@ -63,6 +72,12 @@ void MAP::DrawNumCrop(int cropNum) {
 	crop_PicData[cropNum].AnimaVec[crop_PicData[cropNum].maxGrowth - 1].DrawAnima(5, 95, 45, 135);
 }
 
+void MAP::DrawNPCNumCrop(int cropNum) {
+	DrawBox(700, 100, 750, 140, this->color_white, TRUE);
+	DrawBox(705, 95, 745, 135, this->color_black, TRUE);
+	crop_PicData[cropNum].AnimaVec[crop_PicData[cropNum].maxGrowth - 1].DrawAnima(705, 95, 745, 135);
+}
+
 void MAP::GetMAPChangeData(int *playerScore,RETURN_DATA *data) {
 	if ((*data).x >= 0 && (*data).y >= 0) {
 		switch ((*data).actionFlag) {
@@ -79,7 +94,7 @@ void MAP::GetMAPChangeData(int *playerScore,RETURN_DATA *data) {
 					int cost = crop_PicData[cropNum].cost;
 					if ((*playerScore) >= cost) {
 						//マップの更新
-						this->map[(*data).x][(*data).y] = 1;
+						this->map[(*data).x][(*data).y] = (*data).playerNum;
 						
 						//作物の作成
 						CROP crop((*data).x, (*data).y, cropNum, crop_PicData[cropNum].maxGrowth, crop_PicData[cropNum].score, crop_PicData[cropNum].cropPicDataVec[cropNum].cropPicHandle);
@@ -105,22 +120,20 @@ void MAP::GetMAPChangeData(int *playerScore,RETURN_DATA *data) {
 				for (int i = this->cropVec.size() - 1; i >= 0; i--) {
 					if (this->cropVec[i].x == (*data).x) {
 						if (this->cropVec[i].y == (*data).y) {
-							//作物の成長度を加算
-							this->cropVec[i].time = this->cropVec[i].time + 20;
+							if (this->map[(*data).x][(*data).y] == (*data).playerNum) {
+								//作物の成長度を加算
+								this->cropVec[i].time = this->cropVec[i].time + 20;
 
-							//SE再生
-							this->sound.PlayBGMSound(se[SE_WATERCAN].seSoundHandle);
+								//SE再生
+								this->sound.PlayBGMSound(se[SE_WATERCAN].seSoundHandle);
+							}
 						}
 					}
 				}
 				break;
 				//ツールが"ハサミ"のとき
 			case 2:
-				switch (this->map[(*data).x][(*data).y]) {
-					//農地に作物がないとき
-				case 0:
-					break;
-				case 1:
+				if (this->map[(*data).x][(*data).y] == (*data).playerNum) {
 					//作物の採取
 					*playerScore += ReturnScore((*data).x, (*data).y);
 					this->DeleteCROP((*data).x, (*data).y);
@@ -161,8 +174,6 @@ void MAP::LoadCropGraph() {
 			crop_PicData[i].cropPicDataVec[j].cropPicHandle = LoadGraph(crop_PicData[i].cropPicDataVec[j].cropPicName);
 			ANIMATION_DATA animaData = { crop_PicData[i].cropPicDataVec[j].startFrame, crop_PicData[i].cropPicDataVec[j].endFrame,
 				crop_PicData[i].cropPicDataVec[j].cropPicHandle };
-			//this->animaVec[crop_PicData[i].cropPicDataVec[j].cropGrow + crop_PicData[i].startCropVecNum].anima.push_back(animaData);
-			//crop_PicData[i].AnimaVec.anima.push_back(animaData);
 			anima[crop_PicData[i].cropPicDataVec[j].cropGrow].anima.push_back(animaData);
 		}
 		crop_PicData[i].AnimaVec = anima;
