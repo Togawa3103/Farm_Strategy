@@ -27,8 +27,14 @@ void Game::Update() {
 	this->player.Update(this->map.map);	
 	this->time.Update();
 	this->map.Update(&(this->player.score),this->player.dataVec);
-	//this->player.SetScore();
-	//this->player.PayCost(this->map.cost);
+}
+
+void Game::Update_VS() {
+	this->player.Update(this->map.map);
+	this->npc.Update(this->map.map);
+	this->time.Update();
+	this->map.Update(&(this->player.score), this->player.dataVec);
+	this->map.Update(&(this->npc.score), this->npc.dataVec);
 }
 
 
@@ -39,10 +45,27 @@ void Game::Draw() {
 	this->player.DrawPlayer();
 }
 
+void Game::Draw_VS() {
+	this->time.DrawTime(this->time.time);
+	this->map.DrawMAP();
+	this->map.DrawNumCrop(this->player.cropNum);
+	this->map.DrawNPCNumCrop(this->npc.cropNum);
+
+	this->player.DrawPlayer();
+	this->npc.DrawPlayer();
+}
+
 void Game::Init() {
+	this->time.InitTime();
+	this->map.InitMAP();
 	this->map.LoadCropGraph();
+	this->player.InitPlayer();
 	this->player.LoadToolGraph();
 	this->player.SetMaxCropNum(this->map.maxCropNum);
+	this->npc.InitPlayer();
+	this->npc.LoadToolGraph();
+	this->npc.SetMaxCropNum(this->map.maxCropNum);
+	
 	this->LoadSE();
 }
 
@@ -53,4 +76,5 @@ void Game::LoadSE() {
 	}
 	this->map.se = se;
 	this->player.se = se;
+	this->npc.se = se;
 }

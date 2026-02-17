@@ -9,6 +9,7 @@ enum {
 
 typedef struct RETURN_DATA
 {
+	int playerNum;
 	int x;
 	int y;
 	int actionFlag;

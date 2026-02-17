@@ -7,7 +7,7 @@ public:
 	~Time();
 	void Update(); //時間更新
 	void DrawTime(int time); //時間表示
-
+	void InitTime();
 public:
 	int time; //時間カウント
 	int endTime; //終了時間

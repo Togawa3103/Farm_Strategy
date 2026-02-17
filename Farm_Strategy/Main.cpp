@@ -10,7 +10,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		if (game.gameMode ==StartMenu_End) {
 			break;
 		}
-		game.Game_MainLoop(); //ゲームメインループ開始
+		switch (game.gameMode) {
+		case StartMenu_Solo:
+			game.Game_MainLoop(); //ゲームメインループ開始
+			break;
+		case StartMenu_VS:
+			game.Game_MainVSLoop();
+			break;
+		}
 		game.Game_ResultLoop(); //リザルト画面のループ開始
 		if (game.gameMode == ResultMenu_End) {
 			break;
