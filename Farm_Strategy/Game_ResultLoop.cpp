@@ -12,7 +12,7 @@ void Game::Game_ResultLoop() {
 	int selected_GameMode = 0;
 	while (ScreenFlip() == 0 && ProcessMessage() == 0 && ClearDrawScreen() == 0) {
 		this->Update_ResultMenu(&selected_GameMode, &(gameMode)); //状態の更新
-		this->DrawResult(Comand_Cr1, Comand_Cr2, selected_GameMode);
+		this->DrawResultScreen(Comand_Cr1, Comand_Cr2, selected_GameMode);
 
 		now = clock();
 		looptime = now - end;
@@ -28,8 +28,9 @@ void Game::Game_ResultLoop() {
 	}
 }
 
-void Game::DrawResult(unsigned int Color1, unsigned int Color2, int selectedMenu) {
+void Game::DrawResultScreen(unsigned int Color1, unsigned int Color2, int selectedMenu) {
 	this->DrawResultMenu(Color1, Color2, selectedMenu);
+	this->DrawResult(Color1, Color2,this->player.score,this->npc.score); //対戦モードの場合結果の表示
 	this->player.DrawResult();
 }
 
@@ -38,20 +39,6 @@ void Game::DrawResultMenu(unsigned int Color1, unsigned int Color2, int selected
 	DrawBox(340, 370, 460, 500, Color1, TRUE);
 	DrawBox(345, 375, 455, 495, Color2, TRUE);
 	
-	//外枠の表示
-	DrawBox(340, 270, 460, 320, Color1, TRUE);
-	DrawBox(345, 275, 455, 315, Color2, TRUE);
-	if (this->gameMode== StartMenu_VS) {
-		if (this->player.score > this->npc.score) {
-			DrawFormatString(360, 285 , Color1, "勝ち！");
-		}
-		else if(this->player.score < this->npc.score){
-			DrawFormatString(360, 285, Color1, "負け！");
-		}
-		else if (this->player.score == this->npc.score) {
-			DrawFormatString(360, 285, Color1, "引き分け！");
-		}
-	}
 	//選択肢の表示
 	for (int i = 0; i < ResultMenu_Max; i++) {
 		if (selectedMenu == i) {
@@ -64,3 +51,18 @@ void Game::DrawResultMenu(unsigned int Color1, unsigned int Color2, int selected
 	}
 }
 
+void Game::DrawResult(unsigned int Color1, unsigned int Color2,int playerScore, int nPCScore) {
+	if (this->gameMode == StartMenu_VS) {
+		DrawBox(340, 270, 460, 320, Color1, TRUE);
+		DrawBox(345, 275, 455, 315, Color2, TRUE);
+		if (playerScore > nPCScore) {
+			DrawFormatString(360, 285, Color1, "勝ち！");
+		}
+		else if (playerScore < nPCScore) {
+			DrawFormatString(360, 285, Color1, "負け！");
+		}
+		else if (playerScore == nPCScore) {
+			DrawFormatString(360, 285, Color1, "引き分け！");
+		}
+	}
+}

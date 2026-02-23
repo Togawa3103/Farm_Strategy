@@ -54,9 +54,10 @@ public:
 	void Draw(); //ゲームの描写(一人用)
 	void Draw_VS(); //ゲームの描写(対戦用)
 
-	void DrawResult(unsigned int Color1, unsigned int Color2, int selectedMenu); //結果の描写
+	void DrawResultScreen(unsigned int Color1, unsigned int Color2, int selectedMenu); //リザルト画面の描写
 	void DrawStartMenu(unsigned int Color1, unsigned int Color2, int selectedMenu);//スタートメニューの描写
 	void DrawResultMenu(unsigned int Color1, unsigned int Color2, int selectedMenu);//リザルトメニューの描写
+	void DrawResult(unsigned int Color1, unsigned int Color2, int playerScore,int nPCScore); //結果の描写
 
 	void Init(); //ゲームの初期化
 	void LoadSE(); //SEのロード
