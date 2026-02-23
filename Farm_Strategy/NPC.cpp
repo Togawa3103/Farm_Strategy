@@ -192,9 +192,9 @@ void NPC::DrawTools() {
 			DrawBox(700, 150 + (i * 50), 800, 200 + (i * 50), this->color_white, TRUE);
 		}
 		DrawBox(705, 155 + (i * 50), 795, 195 + (i * 50), this->color_black, TRUE);
-		this->animaVec[i].DrawAnima(5, 155 + (i * 50), 45, 195 + (i * 50));
-		DrawFormatString(720, 155 + (i * 50), this->color_white, ("LV:" + std::to_string(tool_PicDataNPC[i].toolLevel + 1)).c_str());
-		DrawFormatString(720, 175 + (i * 50), this->color_white, std::to_string(tool_PicDataNPC[i].toolUpgradeData[tool_PicDataNPC[i].toolLevel].upgrade_cost).c_str());
+		this->animaVec[i].DrawAnima(705, 155 + (i * 50), 745, 195 + (i * 50));
+		DrawFormatString(760, 155 + (i * 50), this->color_white, ("LV:" + std::to_string(tool_PicDataNPC[i].toolLevel + 1)).c_str());
+		DrawFormatString(760, 175 + (i * 50), this->color_white, std::to_string(tool_PicDataNPC[i].toolUpgradeData[tool_PicDataNPC[i].toolLevel].upgrade_cost).c_str());
 	}
 }
 
