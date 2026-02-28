@@ -160,8 +160,10 @@ void MAP::DeleteCROP(int x, int y) {
 	for (int i = this->cropVec.size() - 1; i >= 0; i--) {
 		if (this->cropVec[i].x == x) {
 			if (this->cropVec[i].y == y) {
-				this->map[this->cropVec[i].x][this->cropVec[i].y] = 0;
-				this->cropVec.erase(this->cropVec.begin() + i);
+				if (this->cropVec[i].cropGrowth == this->cropVec[i].cropMaxGrowth-1) {
+					this->map[this->cropVec[i].x][this->cropVec[i].y] = 0;
+					this->cropVec.erase(this->cropVec.begin() + i);
+				}
 			}
 		}
 	}
@@ -191,4 +193,8 @@ int MAP::ReturnScore(int x,int y) {
 		}
 	}
 	return 0;
+}
+
+std::vector<CROP_PIC>* MAP::ReturnCropData_ADD() {
+	return &crop_PicData;
 }

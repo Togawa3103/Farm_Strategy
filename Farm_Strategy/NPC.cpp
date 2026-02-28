@@ -22,10 +22,10 @@ NPC::NPC() {
 
 NPC::~NPC() {}
 
-void NPC::Update(int map[][HEIGHT]) {
+void NPC::Update(int map[][HEIGHT], std::vector<CROP>* cropVec, std::vector<CROP_PIC>* cropData) {
 	this->InitData();
 	this->inputNPC.InitInput();
-	this->inputNPC.Update(this->toolNum);
+	this->inputNPC.Update(this->toolNum,this->cropNum,this->score, (this->helf_w + this->x), (this->helf_h + this->y),map,cropVec, cropData,&tool_PicDataNPC);
 	this->animaVec[this->toolNum].Update();
 	this->Action(map);
 }
@@ -99,7 +99,7 @@ void NPC::Action(int map[][HEIGHT]) {
 	if (this->inputNPC.keyState[KEY_INPUT_SPACE]) { //キー「SPACE」を押下しているとき
 		int playerX = (this->helf_w + this->x) / MAP_SELL_LENGTH;
 		int playerY = (this->helf_h + this->y) / MAP_SELL_LENGTH;
-		if (map[playerX][playerY] == (this->toolNum + 1) / 2*2) {
+		if (map[playerX][playerY] == (this->toolNum + 1) / 2 * 2) {
 			//アクションデータの追加
 			this->dataVec.push_back({ this->playerNum ,playerX ,playerY, Action_SPACE, this->cropNum, this->toolNum, this->score });
 		}
@@ -172,8 +172,9 @@ void NPC::Action(int map[][HEIGHT]) {
 		this->SetNextCropNum();
 	}
 	if (this->inputNPC.keyState[KEY_INPUT_Z]) {//キー「Z」を押下しているとき
-		this->UpgradeTools(this->toolNum);
+		this->UpgradeTools(&tool_PicDataNPC,this->toolNum);
 	}
+	
 }
 
 

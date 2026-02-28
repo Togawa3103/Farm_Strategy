@@ -1,12 +1,12 @@
 #pragma once
 #include"Player.h"
 #include"Input_NPC.h"
-
+#include"Crop.h"
 class NPC : public Player {
 public:
 	NPC();
 	~NPC();
-	void Update(int map[][HEIGHT]) override; //プレイヤーの更新
+	void Update(int map[][HEIGHT],std::vector<CROP>* cropVec, std::vector<CROP_PIC>* cropData); //プレイヤーの更新
 	
 	void DrawPlayer() override; //プレイヤーの表示
 	void DrawScore() override; //スコアの表示
@@ -18,4 +18,5 @@ public:
 
 public:
 	InputNPC inputNPC;
+	std::vector<CROP> myCropVec;
 };

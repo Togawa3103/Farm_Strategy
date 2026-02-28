@@ -38,6 +38,9 @@ public:
 	void LoadCropGraph(); //画像をロード
 	int ReturnScore(int x, int y); //画像をロード
 	void InitMAP(); //マップ情報の初期化
+
+	std::vector<CROP_PIC>* ReturnCropData_ADD(); //作物データのアドレスを返却
+
 public:
 	std::vector<CROP> cropVec; //すべての作物
 	std::vector<Animation> animaVec; //すべての作物のアニメーション

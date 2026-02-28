@@ -31,7 +31,7 @@ void Game::Update() {
 
 void Game::Update_VS() {
 	this->player.Update(this->map.map);
-	this->npc.Update(this->map.map);
+	this->npc.Update(this->map.map,&(this->map.cropVec), this->map.ReturnCropData_ADD());
 	this->time.Update();
 	this->map.Update(&(this->player.score), this->player.dataVec);
 	this->map.Update(&(this->npc.score), this->npc.dataVec);
