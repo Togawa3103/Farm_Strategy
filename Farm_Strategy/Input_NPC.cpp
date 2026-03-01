@@ -291,83 +291,111 @@ void InputNPC::Agent(int toolNum, int cropNum, int score, int x, int y, int map[
 		}
 	}
 	if(this->cropGrownVec.size()>0){
-		int minDiff = 0;
-		int diff = 99999999999;
-		for (int i = 0; i < this->cropGrownVec.size(); i++) {
-			int diff_i = (x / MAP_SELL_LENGTH - this->cropGrownVec[i].x) * (x / MAP_SELL_LENGTH - this->cropGrownVec[i].x)
-				+ (y / MAP_SELL_LENGTH - this->cropGrownVec[i].y) * (y / MAP_SELL_LENGTH - this->cropGrownVec[i].y);
-			if (diff>diff_i) {
-				minDiff = i;
-				diff = diff_i;
+		int cropVecNum = this->getGrownCropNum(cropVec, this->cropGrownVec[0].x, this->cropGrownVec[0].y);
+		if ((*cropVec)[cropVecNum].cropGrowth != (*cropVec)[cropVecNum].cropMaxGrowth - 1) {
+			if (toolNum == Tool_InputNPC_WateringCan) {
+				//this->keyState[KEY_INPUT_SPACE] = 1;
 			}
-		}
-		if (toolNum == Tool_InputNPC_Scissors) {
-			//this->keyState[KEY_INPUT_SPACE] = 1;
-		}
-		else {
-			this->keyState[KEY_INPUT_E] = 1;
-		}
-		if (x / MAP_SELL_LENGTH > this->cropGrownVec[minDiff].x) {
-			this->keyState[KEY_INPUT_A] = 1;
-		}else if (x / MAP_SELL_LENGTH < this->cropGrownVec[minDiff].x) {
-			this->keyState[KEY_INPUT_D] = 1;
-		}
-		if (y / MAP_SELL_LENGTH > this->cropGrownVec[minDiff].y) {
-			this->keyState[KEY_INPUT_W] = 1;
-		}else if (y / MAP_SELL_LENGTH < this->cropGrownVec[minDiff].y) {
-			this->keyState[KEY_INPUT_S] = 1;
-		}
-		
-		int canUseInErea=0;
-		std::vector<GROWNCROP> erea;
-		GROWNCROP tmp_leftX;
-		GROWNCROP tmp_rightX;
-		GROWNCROP tmp_upY;
-		GROWNCROP tmp_downY;
-		if ((*toolData)[toolNum].toolLevel > 0) {
-			int toolPower = (*toolData)[toolNum].toolUpgradeData[(*toolData)[toolNum].toolLevel].leftX;
-			if(toolPower!=0)if (map[x / MAP_SELL_LENGTH + toolPower][y / MAP_SELL_LENGTH] == (toolNum + 1) / 2 * 2) {
-				//canUseInErea += map[x / MAP_SELL_LENGTH + toolPower][y / MAP_SELL_LENGTH] == (toolNum + 1) / 2 * 2;
-				tmp_leftX = { x / MAP_SELL_LENGTH + toolPower ,y / MAP_SELL_LENGTH };
-				erea.push_back(tmp_leftX);
+			else {
+				this->keyState[KEY_INPUT_E] = 1;
+			}
+			if (x / MAP_SELL_LENGTH > this->cropGrownVec[0].x) {
+				this->keyState[KEY_INPUT_A] = 1;
+			}
+			else if (x / MAP_SELL_LENGTH < this->cropGrownVec[0].x) {
+				this->keyState[KEY_INPUT_D] = 1;
+			}
+			if (y / MAP_SELL_LENGTH > this->cropGrownVec[0].y) {
+				this->keyState[KEY_INPUT_W] = 1;
+			}
+			else if (y / MAP_SELL_LENGTH < this->cropGrownVec[0].y) {
+				this->keyState[KEY_INPUT_S] = 1;
+			}
+			if(x / MAP_SELL_LENGTH == this->cropGrownVec[0].x && y / MAP_SELL_LENGTH == this->cropGrownVec[0].y) {
+				this->keyState[KEY_INPUT_SPACE] = 1;
 			}
 
-			toolPower = (*toolData)[toolNum].toolUpgradeData[(*toolData)[toolNum].toolLevel].rightX;
-			if (toolPower != 0)if (map[x / MAP_SELL_LENGTH + toolPower][y / MAP_SELL_LENGTH] == (toolNum + 1) / 2 * 2) {
-				//canUseInErea += map[x / MAP_SELL_LENGTH + toolPower][y / MAP_SELL_LENGTH] == (toolNum + 1) / 2 * 2;
-				tmp_rightX = { x / MAP_SELL_LENGTH + toolPower ,y / MAP_SELL_LENGTH };
-				erea.push_back(tmp_rightX);
-			}
-
-			toolPower = (*toolData)[toolNum].toolUpgradeData[(*toolData)[toolNum].toolLevel].upY;
-			if (toolPower != 0)if (map[x / MAP_SELL_LENGTH][y / MAP_SELL_LENGTH + toolPower] == (toolNum + 1) / 2 * 2) {
-				//canUseInErea += map[x / MAP_SELL_LENGTH + toolPower][y / MAP_SELL_LENGTH] == (toolNum + 1) / 2 * 2;
-				tmp_upY = { x / MAP_SELL_LENGTH,y / MAP_SELL_LENGTH + toolPower };
-				erea.push_back(tmp_upY);
+		}else{
+			int minDiff = 0;
+			int diff = 99999999999;
+			for (int i = 0; i < this->cropGrownVec.size(); i++) {
+				int diff_i = (x / MAP_SELL_LENGTH - this->cropGrownVec[i].x) * (x / MAP_SELL_LENGTH - this->cropGrownVec[i].x)
+					+ (y / MAP_SELL_LENGTH - this->cropGrownVec[i].y) * (y / MAP_SELL_LENGTH - this->cropGrownVec[i].y);
+				if (diff > diff_i) {
+					minDiff = i;
+					diff = diff_i;
+				}
 			}
 			
-			toolPower = (*toolData)[toolNum].toolUpgradeData[(*toolData)[toolNum].toolLevel].downY;
-			if (toolPower != 0)if (map[x / MAP_SELL_LENGTH][y / MAP_SELL_LENGTH + toolPower] == (toolNum + 1) / 2 * 2) {
-				//canUseInErea += map[x / MAP_SELL_LENGTH + toolPower][y / MAP_SELL_LENGTH] == (toolNum + 1) / 2 * 2;
-				tmp_downY = { x / MAP_SELL_LENGTH,y / MAP_SELL_LENGTH + toolPower };
-				erea.push_back(tmp_downY);
+			if (x / MAP_SELL_LENGTH > this->cropGrownVec[minDiff].x) {
+				this->keyState[KEY_INPUT_A] = 1;
 			}
-		}
-		if (x / MAP_SELL_LENGTH == this->cropGrownVec[minDiff].x && y / MAP_SELL_LENGTH == this->cropGrownVec[minDiff].y) {
-			if (this->SearchGrownCrop(cropVec, this->cropGrownVec[minDiff].x, this->cropGrownVec[minDiff].y)){
-				this->keyState[KEY_INPUT_SPACE] = 1;
-				this->cropGrownVec.erase(this->cropGrownVec.begin() + minDiff);
-				for (int i = 0; i < erea.size(); i++) {
-					int ereaX = (erea[i].x);
-					int ereaY = (erea[i].y);
-					int grownCropNumber = this->getGrownCropNum(&(this->cropGrownVec), ereaX, ereaY);
-					if (grownCropNumber >= 0&& this->SearchGrownCrop(cropVec, ereaX, ereaY)) {
-						this->keyState[KEY_INPUT_SPACE] = 1;
-						//if ((*cropVec).size() != this->cropGrownVec.size()) {
-						this->cropGrownVec.erase(this->cropGrownVec.begin() + grownCropNumber);
-						//}
+			else if (x / MAP_SELL_LENGTH < this->cropGrownVec[minDiff].x) {
+				this->keyState[KEY_INPUT_D] = 1;
+			}
+			if (y / MAP_SELL_LENGTH > this->cropGrownVec[minDiff].y) {
+				this->keyState[KEY_INPUT_W] = 1;
+			}
+			else if (y / MAP_SELL_LENGTH < this->cropGrownVec[minDiff].y) {
+				this->keyState[KEY_INPUT_S] = 1;
+			}
+			if (toolNum == Tool_InputNPC_Scissors) {
+
+				int canUseInErea = 0;
+				std::vector<GROWNCROP> erea;
+				GROWNCROP tmp_leftX;
+				GROWNCROP tmp_rightX;
+				GROWNCROP tmp_upY;
+				GROWNCROP tmp_downY;
+				if ((*toolData)[toolNum].toolLevel > 0) {
+					int toolPower = (*toolData)[toolNum].toolUpgradeData[(*toolData)[toolNum].toolLevel].leftX;
+					if (toolPower != 0)if (map[x / MAP_SELL_LENGTH + toolPower][y / MAP_SELL_LENGTH] == (toolNum + 1) / 2 * 2) {
+						//canUseInErea += map[x / MAP_SELL_LENGTH + toolPower][y / MAP_SELL_LENGTH] == (toolNum + 1) / 2 * 2;
+						tmp_leftX = { x / MAP_SELL_LENGTH + toolPower ,y / MAP_SELL_LENGTH };
+						erea.push_back(tmp_leftX);
+					}
+
+					toolPower = (*toolData)[toolNum].toolUpgradeData[(*toolData)[toolNum].toolLevel].rightX;
+					if (toolPower != 0)if (map[x / MAP_SELL_LENGTH + toolPower][y / MAP_SELL_LENGTH] == (toolNum + 1) / 2 * 2) {
+						//canUseInErea += map[x / MAP_SELL_LENGTH + toolPower][y / MAP_SELL_LENGTH] == (toolNum + 1) / 2 * 2;
+						tmp_rightX = { x / MAP_SELL_LENGTH + toolPower ,y / MAP_SELL_LENGTH };
+						erea.push_back(tmp_rightX);
+					}
+
+					toolPower = (*toolData)[toolNum].toolUpgradeData[(*toolData)[toolNum].toolLevel].upY;
+					if (toolPower != 0)if (map[x / MAP_SELL_LENGTH][y / MAP_SELL_LENGTH + toolPower] == (toolNum + 1) / 2 * 2) {
+						//canUseInErea += map[x / MAP_SELL_LENGTH + toolPower][y / MAP_SELL_LENGTH] == (toolNum + 1) / 2 * 2;
+						tmp_upY = { x / MAP_SELL_LENGTH,y / MAP_SELL_LENGTH + toolPower };
+						erea.push_back(tmp_upY);
+					}
+
+					toolPower = (*toolData)[toolNum].toolUpgradeData[(*toolData)[toolNum].toolLevel].downY;
+					if (toolPower != 0)if (map[x / MAP_SELL_LENGTH][y / MAP_SELL_LENGTH + toolPower] == (toolNum + 1) / 2 * 2) {
+						//canUseInErea += map[x / MAP_SELL_LENGTH + toolPower][y / MAP_SELL_LENGTH] == (toolNum + 1) / 2 * 2;
+						tmp_downY = { x / MAP_SELL_LENGTH,y / MAP_SELL_LENGTH + toolPower };
+						erea.push_back(tmp_downY);
 					}
 				}
+				if (x / MAP_SELL_LENGTH == this->cropGrownVec[minDiff].x && y / MAP_SELL_LENGTH == this->cropGrownVec[minDiff].y) {
+					if (this->SearchGrownCrop(cropVec, this->cropGrownVec[minDiff].x, this->cropGrownVec[minDiff].y)) {
+						this->keyState[KEY_INPUT_SPACE] = 1;
+						this->cropGrownVec.erase(this->cropGrownVec.begin() + minDiff);
+						for (int i = 0; i < erea.size(); i++) {
+							int ereaX = (erea[i].x);
+							int ereaY = (erea[i].y);
+							int grownCropNumber = this->getGrownCropNum(&(this->cropGrownVec), ereaX, ereaY);
+							if (grownCropNumber >= 0 && this->SearchGrownCrop(cropVec, ereaX, ereaY)) {
+								this->keyState[KEY_INPUT_SPACE] = 1;
+								//if ((*cropVec).size() != this->cropGrownVec.size()) {
+								this->cropGrownVec.erase(this->cropGrownVec.begin() + grownCropNumber);
+								//}
+							}
+						}
+					}
+				}
+			}
+			else {
+				this->keyState[KEY_INPUT_E] = 1;
 			}
 		}
 	}
