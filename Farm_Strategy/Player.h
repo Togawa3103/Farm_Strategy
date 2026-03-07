@@ -50,7 +50,7 @@ public:
 	//void GetCropNum(int cropNum); //作物番号の取得
 	void SetMaxCropNum(int maxCropNum); //最大作物番号を設定
 	//void PayCost(int cost); //コストの支払い
-	int UpgradeTools(int toolNum); //ツールのアップグレード
+	int UpgradeTools(std::vector<TOOL_PIC>* toolData,int toolNum); //ツールのアップグレード
 	void SetNextCropNum(); //作物の変更
 	void SetNextToolNum(); //ツールの変更
 

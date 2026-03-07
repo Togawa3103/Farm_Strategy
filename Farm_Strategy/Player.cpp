@@ -172,7 +172,7 @@ void Player::Action(int map[][HEIGHT]) {
 		this->SetNextCropNum();
 	}
 	if (this->input.keyState[KEY_INPUT_Z]) {//キー「Z」を押下しているとき
-		this->UpgradeTools(this->toolNum);
+		this->UpgradeTools(&tool_PicData, this->toolNum);
 	}
 }
 
@@ -220,12 +220,12 @@ void Player::SetMaxCropNum(int maxCropNum) {
 	this->maxCropNum = maxCropNum;
 }
 
-int Player::UpgradeTools(int toolNum) {
-	if (tool_PicData[toolNum].toolLevel<tool_PicData[toolNum].maxLevel) {
-		if (tool_PicData[toolNum].toolUpgradeData[tool_PicData[toolNum].toolLevel].upgrade_cost < this->score) {
+int Player::UpgradeTools(std::vector<TOOL_PIC>* toolData, int toolNum) {
+	if ((*toolData)[toolNum].toolLevel< (*toolData)[toolNum].maxLevel) {
+		if ((*toolData)[toolNum].toolUpgradeData[(*toolData)[toolNum].toolLevel].upgrade_cost < this->score) {
 			//ツールアップグレード
-			this->score = this->score - tool_PicData[toolNum].toolUpgradeData[tool_PicData[toolNum].toolLevel].upgrade_cost;
-			tool_PicData[toolNum].toolLevel++;
+			this->score = this->score - (*toolData)[toolNum].toolUpgradeData[(*toolData)[toolNum].toolLevel].upgrade_cost;
+			(*toolData)[toolNum].toolLevel++;
 
 			//SE再生
 			this->sound.PlayBGMSound(se[SE_UPGRADE].seSoundHandle);
@@ -246,8 +246,7 @@ void Player::SetNextCropNum() {
 }
 
 void Player::SetNextToolNum() {
-	this->toolNum = (this->toolNum + 1) % Tool_MAX; 
-	
+	this->toolNum = (this->toolNum + 1) % Tool_MAX;
 	//SE再生
 	this->sound.PlayBGMSound(se[SE_SELECTTOOL].seSoundHandle);
 }
