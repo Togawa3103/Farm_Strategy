@@ -28,7 +28,8 @@ public:
 	void Update(int toolNum, int cropNum, int score,int x, int y, int map[][HEIGHT], std::vector<CROP>* cropVec, std::vector<CROP_PIC>* cropData, std::vector<TOOL_PIC>* toolData);
 	void Agent(int toolNum, int cropNum, int score, int x, int y, int map[][HEIGHT], std::vector<CROP>* cropVec, std::vector<CROP_PIC>* cropData, std::vector<TOOL_PIC>* toolData);
 	bool SearchGrownCrop(std::vector<CROP>* cropVec, int x, int y); //ì•¨ƒŠƒXƒg‚©‚çˆø”‚ÌˆÊ’u‚Ìì•¨‚ªûŠn‰Â”\‚©ŒŸõ
-	int getGrownCropNum(std::vector<CROP>* cropVec, int x, int y); //
+	int getGrownCropNum(std::vector<CROP>* cropVec, int x, int y); //ûŠn—\’èì•¨‚Ì’†‚Å‘ÎÛ‚Ìì•¨‚ğŒŸõ
+	void InitCropGrownVec(); //ûŠn—\’èì•¨‚Ì‰Šú‰»
 	COORDINATE getNeighborhoodFreeSpace(int map[][HEIGHT], int x, int y); //‹ß—×8ƒ}ƒX‚Ì‹ó‚¢‚Ä‚¢‚é“y’n‚Å‹ß‚¢‚à‚Ì‚ğŒŸõ
 public:
 	std::random_device rd;

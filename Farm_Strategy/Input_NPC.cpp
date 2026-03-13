@@ -2,6 +2,10 @@
 #include"Input_NPC.h"
 #include"Tool.h"
 
+void InputNPC::InitCropGrownVec() {
+	this->cropGrownVec.clear();
+}
+
 void InputNPC::Update(int toolNum, int cropNum, int score, int x, int y, int map[][HEIGHT], std::vector<CROP>* cropVec, std::vector<CROP_PIC>* cropData, std::vector<TOOL_PIC>* toolData) {
 	memset(this->keyState, 0, sizeof(char) * 256);
 	this->Agent(toolNum,cropNum,score,x,y,map,cropVec,cropData,toolData);
@@ -182,7 +186,7 @@ void InputNPC::Agent(int toolNum, int cropNum, int score, int x, int y, int map[
 			this->keyState[KEY_INPUT_E] = 1;
 		}
 
-		//Å‚à‹ß‚¢‹ß—×8ƒ}ƒX‚Å‹ó‚¢‚Ä‚¢‚é“y’n‚ð’T‚·
+		//Å‚à‹ß‚¢‹ó‚¢‚Ä‚¢‚é“y’n‚ð’T‚·
 		int minDiff = 0;
 		COORDINATE returnXY;
 		returnXY = this->getNeighborhoodFreeSpace(map,x,y);
