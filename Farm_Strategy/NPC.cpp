@@ -211,4 +211,5 @@ void NPC::InitPlayer() {
 	for (int i = 0; i < Tool_MAX; i++) {
 		tool_PicDataNPC[i].toolLevel = 0;
 	}
+	this->inputNPC.InitCropGrownVec();
 }

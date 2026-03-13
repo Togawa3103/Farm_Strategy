@@ -2,6 +2,10 @@
 #include"Input_NPC.h"
 #include"Tool.h"
 
+void InputNPC::InitCropGrownVec() {
+	this->cropGrownVec.clear();
+}
+
 void InputNPC::Update(int toolNum, int cropNum, int score, int x, int y, int map[][HEIGHT], std::vector<CROP>* cropVec, std::vector<CROP_PIC>* cropData, std::vector<TOOL_PIC>* toolData) {
 	memset(this->keyState, 0, sizeof(char) * 256);
 	this->Agent(toolNum,cropNum,score,x,y,map,cropVec,cropData,toolData);
@@ -22,9 +26,6 @@ void InputNPC::Update(int toolNum, int cropNum, int score, int x, int y, int map
 	else if (this->keyState[KEY_INPUT_Z]) {
 		this->frame++;
 	}
-	/*else if (toolNum == 1 && this->keyState[KEY_INPUT_SPACE]) {
-		this->frame++;
-	}*/
 }
 
 void InputNPC::Agent(int toolNum, int cropNum, int score, int x, int y, int map[][HEIGHT], std::vector<CROP>* cropVec, std::vector<CROP_PIC>* cropData, std::vector<TOOL_PIC>* toolData) {
@@ -185,7 +186,7 @@ void InputNPC::Agent(int toolNum, int cropNum, int score, int x, int y, int map[
 			this->keyState[KEY_INPUT_E] = 1;
 		}
 
-		//Å‚à‹ß‚¢‹ß—×8ƒ}ƒX‚Å‹ó‚¢‚Ä‚¢‚é“y’n‚ð’T‚·
+		//Å‚à‹ß‚¢‹ó‚¢‚Ä‚¢‚é“y’n‚ð’T‚·
 		int minDiff = 0;
 		COORDINATE returnXY;
 		returnXY = this->getNeighborhoodFreeSpace(map,x,y);
@@ -201,38 +202,6 @@ void InputNPC::Agent(int toolNum, int cropNum, int score, int x, int y, int map[
 		else if ((returnXY.y < y / MAP_SELL_LENGTH)) {
 			this->keyState[KEY_INPUT_W] = 1;
 		}
-		/*
-		switch (minDiff) {
-		case 0:
-			this->keyState[KEY_INPUT_A] = 1;
-			this->keyState[KEY_INPUT_W] = 1;
-			break;
-		case 1:
-			this->keyState[KEY_INPUT_W] = 1;
-			break;
-		case 2:
-			this->keyState[KEY_INPUT_D] = 1;
-			this->keyState[KEY_INPUT_W] = 1;
-			break;
-		case 3:
-			this->keyState[KEY_INPUT_A] = 1;
-			break;
-		case 4:
-			this->keyState[KEY_INPUT_D] = 1;
-			break;
-		case 5:
-			this->keyState[KEY_INPUT_A] = 1;
-			this->keyState[KEY_INPUT_S] = 1;
-			break;
-		case 6:
-			this->keyState[KEY_INPUT_S] = 1;
-			break;
-		case 7:
-			this->keyState[KEY_INPUT_S] = 1;
-			this->keyState[KEY_INPUT_D] = 1;
-			break;
-		}
-		*/
 	}
 }
 
