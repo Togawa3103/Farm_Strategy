@@ -6,9 +6,9 @@ void InputNPC::InitCropGrownVec() {
 	this->cropGrownVec.clear();
 }
 
-void InputNPC::Update(int toolNum, int cropNum, int score, int x, int y, int map[][HEIGHT], std::vector<CROP>* cropVec, std::vector<CROP_PIC>* cropData, std::vector<TOOL_PIC>* toolData) {
+void InputNPC::Update(int time, int toolNum, int cropNum, int score, int x, int y, int map[][HEIGHT], std::vector<CROP>* cropVec, std::vector<CROP_PIC>* cropData, std::vector<TOOL_PIC>* toolData) {
 	memset(this->keyState, 0, sizeof(char) * 256);
-	this->Agent(toolNum,cropNum,score,x,y,map,cropVec,cropData,toolData);
+	this->Agent(time,toolNum,cropNum,score,x,y,map,cropVec,cropData,toolData);
 	if (this->frame > 0) {
 		this->keyState[KEY_INPUT_E] = 0;
 		this->keyState[KEY_INPUT_Q] = 0;
@@ -28,17 +28,16 @@ void InputNPC::Update(int toolNum, int cropNum, int score, int x, int y, int map
 	}
 }
 
-void InputNPC::Agent(int toolNum, int cropNum, int score, int x, int y, int map[][HEIGHT], std::vector<CROP>* cropVec, std::vector<CROP_PIC>* cropData, std::vector<TOOL_PIC>* toolData) {
-	//次の作物のコストが支払えるとき、作物の変更を行う
+void InputNPC::Agent(int time, int toolNum, int cropNum, int score, int x, int y, int map[][HEIGHT], std::vector<CROP>* cropVec, std::vector<CROP_PIC>* cropData, std::vector<TOOL_PIC>* toolData) {
+	//次の作物のコストが支払える余裕があるとき or 今の作物のコストが払えないとき or 今の作物が時間内に育ち切らないとき、作物の変更を行う
 	int nextCropNum = (cropNum + 1) % (*cropData).size();
-	if (((*cropData)[nextCropNum].cost<score&& (*cropData)[nextCropNum].cost >(*cropData)[cropNum].cost)|| (*cropData)[cropNum].cost > score) {
+	if (((*cropData)[nextCropNum].cost + nextCropNum * 100 <score&& (*cropData)[nextCropNum].cost >(*cropData)[cropNum].cost && (*cropData)[nextCropNum].growthSpeed / 100 * ((*cropData)[nextCropNum].maxGrowth - 1) < 50 - time)|| (*cropData)[cropNum].cost > score || (*cropData)[cropNum].growthSpeed / 100 * ((*cropData)[cropNum].maxGrowth - 1) > 50 - time) {
 		this->keyState[KEY_INPUT_Q] = 1;
 	}
 
 	//今のツール番号のアップグレードが行えるとき、ツールのアップグレード
-	if ((*toolData)[toolNum].toolUpgradeData[(*toolData)[toolNum].toolLevel].upgrade_cost<score) {
+	if ((*toolData)[toolNum].toolUpgradeData[(*toolData)[toolNum].toolLevel].upgrade_cost + 300 <score) {
 		this->keyState[KEY_INPUT_Z] = 1;
-		//toolNum = toolNum + 1;
 	}
 
 	//すべての作物からNPCの作物をカウント
@@ -51,7 +50,7 @@ void InputNPC::Agent(int toolNum, int cropNum, int score, int x, int y, int map[
 		}
 	}
 
-	//NPCの作物が20個以上になり、収穫予定作物があるとき
+	//NPCの作物が(50-経過時間/2)+5個以上になり、収穫予定作物があるとき
 	if(this->cropGrownVec.size()>0){
 		int cropVecNum = this->getGrownCropNum(cropVec, this->cropGrownVec[0].x, this->cropGrownVec[0].y);
 		//先頭の収穫予定作物が収穫できないとき、じょうろで成長させる
@@ -166,19 +165,19 @@ void InputNPC::Agent(int toolNum, int cropNum, int score, int x, int y, int map[
 		}
 	}
 
-	//NPCの作物が20個以上になったとき
-	else if (count >=20) {
+	//NPCの作物が(50-経過時間/2)+5個以上になったとき or 残り時間が5秒以内のとき
+	else if (count >=(50-time / 2 + 5)||time>45) {
 		//収穫予定作物を設定
 		for (int i = 0; i < (*cropVec).size(); i++) {
 			if(map[(*cropVec)[i].x][(*cropVec)[i].y] == 2)this->cropGrownVec.push_back((*cropVec)[i]);
 		}
 	}
 	
-	//NPCの作物が20個以下のとき
-	else if (count < 20) {
+	//NPCの作物が(50-経過時間/2)+5個以下のとき
+	else if (count < (50 - time / 2 +5)) {
 		
 		if (toolNum == Tool_InputNPC_Hoe) {
-			if (map[x / MAP_SELL_LENGTH][y / MAP_SELL_LENGTH]==0) {
+			if (map[x / MAP_SELL_LENGTH][y / MAP_SELL_LENGTH]==0 && (*cropData)[cropNum].growthSpeed / 100 * ((*cropData)[cropNum].maxGrowth - 1) < 50 - time){
 				this->keyState[KEY_INPUT_SPACE] = 1;
 			}
 		}

@@ -36,8 +36,8 @@ public:
 	void Update_ResultMenu(int maxGameMode, int* selected_GameMode, int* gameMode); //リザルトメニューのプレイヤーの更新
 
 	virtual void DrawPlayer(); //プレイヤーの表示
-	virtual void DrawScore(); //スコアの表示
-	void DrawResult(); //スコアの表示
+	virtual void DrawScore(int x, int y); //スコアの表示
+	void DrawResult(int x, int y); //スコアの表示
 
 	virtual void DrawTools(); //ツールの表示
 	virtual void Action(int map[][HEIGHT]); //入力による行動選択

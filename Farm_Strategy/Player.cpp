@@ -31,7 +31,7 @@ void Player::Update(int map[][HEIGHT]) {
 }
 
 void Player::DrawPlayer() {
-	this->DrawScore();
+	this->DrawScore(0,50);
 	this->DrawTools();
 	//DrawBox(285 + this->x, 230 + this->y, 295 + this->x, 240 + this->y, this->color_red,TRUE);	//	プレイヤー表示
 	this->animaVec[this->toolNum].DrawAnima(this->helf_w + this->x +50, this->helf_h + this->y -10,
@@ -195,10 +195,10 @@ void Player::LoadToolGraph() {
 	}
 }
 
-void Player::DrawScore() {
-	DrawBox(0, 50, 80, 100, this->color_white, TRUE);
-	DrawBox(5, 55, 75, 95, this->color_black, TRUE);
-	DrawFormatString(20, 70, this->color_white, std::to_string(score).c_str());
+void Player::DrawScore(int x, int y) {
+	DrawBox(x, y, x+80, y+50, this->color_white, TRUE);
+	DrawBox(x+5, y+5, x+75, y+45, this->color_black, TRUE);
+	DrawFormatString(x+20, y+20, this->color_white, std::to_string(score).c_str());
 }
 
 void Player::DrawTools() {

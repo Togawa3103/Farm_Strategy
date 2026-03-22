@@ -25,8 +25,8 @@ typedef struct {
 class InputNPC : public Input {
 public:
 	//void Update(int toolNum) override;
-	void Update(int toolNum, int cropNum, int score,int x, int y, int map[][HEIGHT], std::vector<CROP>* cropVec, std::vector<CROP_PIC>* cropData, std::vector<TOOL_PIC>* toolData);
-	void Agent(int toolNum, int cropNum, int score, int x, int y, int map[][HEIGHT], std::vector<CROP>* cropVec, std::vector<CROP_PIC>* cropData, std::vector<TOOL_PIC>* toolData);
+	void Update(int time,int toolNum, int cropNum, int score,int x, int y, int map[][HEIGHT], std::vector<CROP>* cropVec, std::vector<CROP_PIC>* cropData, std::vector<TOOL_PIC>* toolData);
+	void Agent(int time, int toolNum, int cropNum, int score, int x, int y, int map[][HEIGHT], std::vector<CROP>* cropVec, std::vector<CROP_PIC>* cropData, std::vector<TOOL_PIC>* toolData);
 	bool SearchGrownCrop(std::vector<CROP>* cropVec, int x, int y); //ì•¨ƒŠƒXƒg‚©‚çˆø”‚ÌˆÊ’u‚Ìì•¨‚ªûŠn‰Â”\‚©ŒŸõ
 	int getGrownCropNum(std::vector<CROP>* cropVec, int x, int y); //ûŠn—\’èì•¨‚Ì’†‚Å‘ÎÛ‚Ìì•¨‚ğŒŸõ
 	void InitCropGrownVec(); //ûŠn—\’èì•¨‚Ì‰Šú‰»

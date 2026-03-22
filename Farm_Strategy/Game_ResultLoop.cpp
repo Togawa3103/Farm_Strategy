@@ -31,7 +31,10 @@ void Game::Game_ResultLoop() {
 void Game::DrawResultScreen(unsigned int Color1, unsigned int Color2, int selectedMenu) {
 	this->DrawResultMenu(Color1, Color2, selectedMenu);
 	this->DrawResult(Color1, Color2,this->player.score,this->npc.score); //‘Îíƒ‚[ƒh‚Ìê‡Œ‹‰Ê‚Ì•\Ž¦
-	this->player.DrawResult();
+	this->player.DrawResult(350,50);
+	if (this->gameMode == StartMenu_VS) {
+		this->npc.DrawResult(350, 100);
+	}
 }
 
 void Game::DrawResultMenu(unsigned int Color1, unsigned int Color2, int selectedMenu) {
