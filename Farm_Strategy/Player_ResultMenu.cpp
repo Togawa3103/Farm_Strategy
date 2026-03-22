@@ -18,8 +18,8 @@ void Player::Action_ResultMenu(int maxGameMode, int* selected_GameMode, int* gam
 	}
 }
 
-void Player::DrawResult() {
-	DrawBox(350, 50, 450, 100, this->color_white, TRUE);
-	DrawBox(355, 55, 445, 95, this->color_black, TRUE);
-	DrawFormatString(360, 70, this->color_white, std::to_string(score).c_str());
+void Player::DrawResult(int x, int y) {
+	DrawBox(x, y, x+100, y+50, this->color_white, TRUE);
+	DrawBox(x+5, y+5, x+95, y+45, this->color_black, TRUE);
+	DrawFormatString(x+10, y+20, this->color_white, std::to_string(this->score).c_str());
 }

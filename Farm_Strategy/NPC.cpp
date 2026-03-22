@@ -22,16 +22,16 @@ NPC::NPC() {
 
 NPC::~NPC() {}
 
-void NPC::Update(int map[][HEIGHT], std::vector<CROP>* cropVec, std::vector<CROP_PIC>* cropData) {
+void NPC::Update(int time, int map[][HEIGHT], std::vector<CROP>* cropVec, std::vector<CROP_PIC>* cropData) {
 	this->InitData();
 	this->inputNPC.InitInput();
-	this->inputNPC.Update(this->toolNum,this->cropNum,this->score, (this->helf_w + this->x), (this->helf_h + this->y),map,cropVec, cropData,&tool_PicDataNPC);
+	this->inputNPC.Update(time,this->toolNum,this->cropNum,this->score, (this->helf_w + this->x), (this->helf_h + this->y),map,cropVec, cropData,&tool_PicDataNPC);
 	this->animaVec[this->toolNum].Update();
 	this->Action(map);
 }
 
 void NPC::DrawPlayer() {
-	this->DrawScore();
+	this->DrawScore(700, 50);
 	this->DrawTools();
 	//DrawBox(285 + this->x, 230 + this->y, 295 + this->x, 240 + this->y, this->color_red,TRUE);	//	プレイヤー表示
 	this->animaVec[this->toolNum].DrawAnima(this->helf_w + this->x + 50, this->helf_h + this->y - 10,
@@ -177,12 +177,13 @@ void NPC::Action(int map[][HEIGHT]) {
 	
 }
 
-
-void NPC::DrawScore() {
-	DrawBox(700, 50, 780, 100, this->color_white, TRUE);
-	DrawBox(705, 55, 775, 95, this->color_black, TRUE);
+/*
+void NPC::DrawScore(int x, int y) {
+	DrawBox(x, y, x+8, 100, this->color_white, TRUE);
+	DrawBox(x+5, y+5, 775, 95, this->color_black, TRUE);
 	DrawFormatString(720, 70, this->color_white, std::to_string(score).c_str());
 }
+*/
 
 void NPC::DrawTools() {
 	for (int i = 0; i < Tool_MAX; i++) {
