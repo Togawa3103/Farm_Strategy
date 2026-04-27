@@ -6,10 +6,12 @@
 #include "Time.h"
 #include "MAP.h"
 #include "NPC.h"
+#include "NPC_Learning.h"
 
 enum {
 	StartMenu_Solo,
 	StartMenu_VS,
+	StartMenu_Learning,
 	StartMenu_End,
 	StartMenu_Max,
 };
@@ -29,6 +31,7 @@ typedef struct {
 static MenuString start[] = {
 	{"ひとりで"},
 	{"たいせん"},
+	{"学習"},
 	{"やめる"}
 };
 
@@ -45,14 +48,18 @@ public:
 	void Game_MainVSLoop(); //メインループ
 	void Game_StartLoop(); //スタート画面ループ
 	void Game_ResultLoop(); //リザルト画面ループ
+	void Game_LearningLoop(); //学習用ループ
+
 	void Update(); //ゲームの更新(一人用)
 	void Update_VS(); //ゲームの更新(対戦用)
+	void Update_Learning(); //ゲームの更新(学習用)
 
 	void Update_StartMenu(int* selected_GameMode, int *gameMode); //スタート画面でのゲームの更新
 	void Update_ResultMenu(int* selected_GameMode, int* gameMode); //リザルト画面でのゲームの更新
 
 	void Draw(); //ゲームの描写(一人用)
 	void Draw_VS(); //ゲームの描写(対戦用)
+	void Draw_Learning(); //ゲームの描写(学習用)
 
 	void DrawResultScreen(unsigned int Color1, unsigned int Color2, int selectedMenu); //リザルト画面の描写
 	void DrawStartMenu(unsigned int Color1, unsigned int Color2, int selectedMenu);//スタートメニューの描写
@@ -60,6 +67,7 @@ public:
 	void DrawResult(unsigned int Color1, unsigned int Color2, int playerScore,int nPCScore); //結果の描写
 
 	void Init(); //ゲームの初期化
+	void Init_Learning(); //ゲームの初期化
 	void LoadSE(); //SEのロード
 public:
 	//int game_Mode; //ゲームの状態
@@ -71,6 +79,7 @@ public:
 	
 	Player player; //プレイヤークラス
 	NPC npc; //NPCクラス
+	NPC_Learning npc1; //NPCクラス
 	Time time; //Timeクラス
 	MAP map; //MAPクラス
 

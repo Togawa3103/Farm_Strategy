@@ -1,5 +1,20 @@
 #pragma once
 #include"DxLib.h"
+enum {
+	Tool_InputNPC_Hoe,
+	Tool_InputNPC_WateringCan,
+	Tool_InputNPC_Scissors,
+	Tool_InputNPC_MAX,
+};
+typedef struct {
+	int x;
+	int y;
+}GROWNCROP;
+
+typedef struct {
+	int x;
+	int y;
+}COORDINATE;
 
 class Input {
 public:

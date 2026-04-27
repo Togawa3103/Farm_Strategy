@@ -37,6 +37,15 @@ void Game::Update_VS() {
 	this->map.Update(&(this->npc.score), this->npc.dataVec);
 }
 
+void Game::Update_Learning() {
+	this->npc1.Update(this->time.time / 100, this->map.map, &(this->map.cropVec), this->map.ReturnCropData_ADD());
+	//this->npc.Update(this->time.time / 100, this->map.map, &(this->map.cropVec), this->map.ReturnCropData_ADD());
+	this->player.Update(this->map.map);
+	this->time.Update();
+	this->map.Update(&(this->npc1.score), this->npc1.dataVec);
+	//this->map.Update(&(this->npc.score), this->npc.dataVec);
+	this->map.Update(&(this->player.score), this->player.dataVec);
+}
 
 void Game::Draw() {
 	this->time.DrawTime(this->time.time);
@@ -77,4 +86,34 @@ void Game::LoadSE() {
 	this->map.se = se;
 	this->player.se = se;
 	this->npc.se = se;
+	this->npc1.se = se;
+}
+
+void Game::Init_Learning() {
+	this->time.InitTime();
+	this->map.InitMAP();
+	this->map.LoadCropGraph();
+	this->npc1.InitPlayer();
+	//this->npc1.playerNum = 1;
+	this->npc1.LoadToolGraph();
+	this->npc1.SetMaxCropNum(this->map.maxCropNum);
+	//this->npc.InitPlayer();
+	//this->npc.LoadToolGraph();
+	//this->npc.SetMaxCropNum(this->map.maxCropNum);
+	this->player.InitPlayer();
+	this->player.LoadToolGraph();
+	this->player.SetMaxCropNum(this->map.maxCropNum);
+
+	this->LoadSE();
+}
+
+void Game::Draw_Learning() {
+	this->time.DrawTime(this->time.time);
+	this->map.DrawMAP();
+	this->map.DrawNPCNumCrop(this->npc1.cropNum);
+	//this->map.DrawNPCNumCrop(this->npc.cropNum);
+
+	this->npc1.DrawPlayer();
+	//this->npc.DrawPlayer();
+	this->player.DrawPlayer();
 }

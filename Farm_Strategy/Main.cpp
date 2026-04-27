@@ -15,7 +15,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			game.Game_MainLoop(); //ゲームメインループ開始
 			break;
 		case StartMenu_VS:
-			game.Game_MainVSLoop();
+			game.Game_MainVSLoop(); //ゲームメイン（対戦）ループ開始
+			break;
+		case StartMenu_Learning:
+			game.Game_LearningLoop(); //ゲーム学習用ループ開始
 			break;
 		}
 		game.Game_ResultLoop(); //リザルト画面のループ開始
