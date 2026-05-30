@@ -7,6 +7,8 @@ Game::Game() {
 	this->end=0;
 	this->now=0;
 	this->looptime = 0;
+	this->time.endTime = 10000;
+	this->time.time = 0;
 	ChangeWindowMode(TRUE); //ウインドウモード(TRUE)・フルスクリーンモード(FALSE)の変更(DXライブラリ)
 	SetGraphMode(800, 700, 32); //画面モードの変更(画面の解像度、カラービット数)
 	DxLib_Init();   // DXライブラリ初期化処理

@@ -17,6 +17,7 @@ public:
 	int getGrownCropNum(std::vector<CROP>* cropVec, int x, int y); //ûŠn—\’èì•¨‚Ì’†‚Å‘ÎÛ‚Ìì•¨‚ğŒŸõ
 	void InitCropGrownVec(); //ûŠn—\’èì•¨‚Ì‰Šú‰»
 	COORDINATE selectAction(int map[][HEIGHT], std::vector<CROP>* cropVec,int x, int y);
+	COORDINATE InputNPC_Learning::getNeighborhoodFreeSpace(int map[][HEIGHT], int x, int y);
 	float getReward(int map[][HEIGHT], std::vector<CROP>* cropVec, int x, int y);
 	std::vector<float> getRewardList(int map[][HEIGHT], std::vector<CROP>* cropVec, int x, int y);
 	float getMaxNextQ(int map[][HEIGHT], std::vector<CROP>* cropVec, int x, int y);
@@ -27,4 +28,5 @@ public:
 	std::vector<float> qVec;
 	int action;
 	COORDINATE returnXY;
+	COORDINATE old_ReturnXY;
 };

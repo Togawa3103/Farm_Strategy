@@ -2,7 +2,7 @@
 #include <fstream>
 
 void Game::Game_LearningLoop() {
-	std::ifstream infile("output.txt");  // 読み込むファイルのパスを指定
+	/*std::ifstream infile("output.txt");  // 読み込むファイルのパスを指定
 	std::string line;
 	int count = 0;
 	while (std::getline(infile, line)) {  // 1行ずつ読み込む
@@ -11,7 +11,7 @@ void Game::Game_LearningLoop() {
 	}
 
 	infile.close();
-	
+	*/
 	for (int i = 0; i <= 50;i++) {
 		this->Init_Learning();
 		while (ScreenFlip() == 0 && ProcessMessage() == 0 && ClearDrawScreen() == 0) {

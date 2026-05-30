@@ -11,7 +11,7 @@ Time::Time() {
 Time::~Time() {}
 
 void Time::Update() {
-	time++;
+	this->time++;
 }
 
 void Time::DrawTime(int time) {

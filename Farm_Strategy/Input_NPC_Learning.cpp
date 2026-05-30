@@ -197,12 +197,17 @@ void InputNPC_Learning::Agent(int time, int toolNum, int cropNum, int score, int
 		}
 
 		//actionをリセット
-		if (returnXY.x == x / MAP_SELL_LENGTH && returnXY.y < y / MAP_SELL_LENGTH) {
+		if (returnXY.x == x / MAP_SELL_LENGTH && returnXY.y == y / MAP_SELL_LENGTH) {
 			this->action = -1;
 		}
+
 		//Qテーブルからよいアクションを検索
-		if(this->action==-1)returnXY = this->selectAction(map, cropVec,x, y);
-		
+		if (this->action == -1) {
+			returnXY = this->selectAction(map, cropVec, x, y);
+			this->old_ReturnXY.x = x / MAP_SELL_LENGTH;
+			this->old_ReturnXY.y = y / MAP_SELL_LENGTH;
+
+		}
 		if (returnXY.x > x / MAP_SELL_LENGTH) {
 			this->keyState[KEY_INPUT_D] = 1;
 		}
@@ -247,11 +252,11 @@ COORDINATE InputNPC_Learning::selectAction(int map[][HEIGHT], std::vector<CROP>*
 	int action = 0;
 	int epsilon = 30;
 
-	
+
 	int maxAction = 0;
 	float qMax = -99999;
 	int jMax = 0;
-	std::vector<float> rewardList = this->getRewardList(map,cropVec,x,y);
+	std::vector<float> rewardList = this->getRewardList(map, cropVec, x, y);
 	while (true) {
 		if (epsilon < rd() % 100) {
 			for (int i = 0; i < 4; i++) {
@@ -274,14 +279,14 @@ COORDINATE InputNPC_Learning::selectAction(int map[][HEIGHT], std::vector<CROP>*
 		}
 		else {
 			maxAction = rd() % 4;
-			for (int i = 0; i < pattern_hoe.size() / 4;i++) {
-				if (rewardList[maxAction]==pattern_hoe[i]) {
+			for (int i = 0; i < pattern_hoe.size() / 4; i++) {
+				if (rewardList[maxAction] == pattern_hoe[i]) {
 					qMax = qVec[i + maxAction * pattern_hoe.size() / 4];
 					jMax = i;
 				}
 			}
 		}
-		
+
 		switch (maxAction) {
 		case 0:
 			this->returnXY = { x / MAP_SELL_LENGTH ,y / MAP_SELL_LENGTH - 1 };
@@ -297,15 +302,22 @@ COORDINATE InputNPC_Learning::selectAction(int map[][HEIGHT], std::vector<CROP>*
 			break;
 		}
 
-		qVec[jMax + maxAction * pattern_hoe.size() / 4] += 0.01 * (rewardList[maxAction] + 0.9 * getMaxNextQ(map, cropVec, this->returnXY.x, this->returnXY.y) - qVec[jMax + maxAction * pattern_hoe.size() / 4]);
-		//qVec[jMax + maxAction * pattern_hoe.size() / 4] += 0.1 * (rewardList[maxAction] + 0.1 * qMax);
+		//同じマスを行き来する場合は最も近い空いているマスに移動
+		if (this->returnXY.x == this->old_ReturnXY.x
+			&& this->returnXY.y == this->old_ReturnXY.y) {
+			this->returnXY = this->getNeighborhoodFreeSpace(map, x, y);
+		}
+		else {
+			//Qテーブルの更新
+			qVec[jMax + maxAction * pattern_hoe.size() / 4] += 0.01 * (rewardList[maxAction] + 0.9 * getMaxNextQ(map, cropVec, this->returnXY.x, this->returnXY.y) - qVec[jMax + maxAction * pattern_hoe.size() / 4]);
+			//qVec[jMax + maxAction * pattern_hoe.size() / 4] += 0.1 * (rewardList[maxAction] + 0.1 * qMax);
+		}
 
-		if (this->returnXY.x>=0&& this->returnXY.x < WIDTH
+		if (this->returnXY.x >= 0 && this->returnXY.x < WIDTH
 			&& this->returnXY.y >= 0 && this->returnXY.y < HEIGHT) {
 			break;
 		}
 	}
-	
 	return returnXY;
 }
 
@@ -321,7 +333,7 @@ float InputNPC_Learning::getReward(int map[][HEIGHT], std::vector<CROP>* cropVec
 		reward -= 5;
 	}
 	if (map[x][y] == 1) {
-		reward -= 100;
+		reward -= 50;
 	}
 	return reward;
 }
@@ -639,7 +651,7 @@ float InputNPC_Learning::getMaxNextQ(int map[][HEIGHT], std::vector<CROP>* cropV
 	float maxQ = -999999999;
 	int pattern_hoeNum = 0;
 	for (int i = 0;i < pattern_hoe.size() / 4; i++) {
-		if (pattern_hoe[i] == rewardList[i]) {
+		if (pattern_hoe[i] == rewardList[0]) {
 			pattern_hoeNum = i;
 			break;
 		}
@@ -650,4 +662,52 @@ float InputNPC_Learning::getMaxNextQ(int map[][HEIGHT], std::vector<CROP>* cropV
 		}
 	}
 	return maxQ;
+}
+
+COORDINATE InputNPC_Learning::getNeighborhoodFreeSpace(int map[][HEIGHT], int x, int y) {
+	std::vector<int> diff;
+	std::vector<std::vector<int>> vec;
+
+	int minDiff = 0;
+	bool couldSearch = false;
+
+	COORDINATE returnXY;
+	if (!couldSearch) {
+		int count = 1;
+		while (count < WIDTH) {
+			diff = { 999999999 };
+			vec = {};
+			for (int i = -1 * count; i <= 1 * count; i++) {
+				for (int j = -1 * count; j <= 1 * count; j++) {
+					if (x / MAP_SELL_LENGTH + i > 0 && x / MAP_SELL_LENGTH + i < WIDTH) {
+						if (y / MAP_SELL_LENGTH + j > 0 && y / MAP_SELL_LENGTH + j < HEIGHT) {
+							if (map[x / MAP_SELL_LENGTH + i][y / MAP_SELL_LENGTH + j] == 0) {
+								int diff_length = (x - (x / MAP_SELL_LENGTH + i) * MAP_SELL_LENGTH) * (x - (x / MAP_SELL_LENGTH + i) * MAP_SELL_LENGTH)
+									+ (y - (y / MAP_SELL_LENGTH + j) * MAP_SELL_LENGTH) * (y - (y / MAP_SELL_LENGTH + j) * MAP_SELL_LENGTH);
+								diff.push_back(diff_length);
+								vec.push_back({ x / MAP_SELL_LENGTH + i, y / MAP_SELL_LENGTH + j });
+							}
+						}
+					}
+				}
+			}
+			for (int i = 1; i < diff.size(); i++) {
+				if (diff[minDiff] > diff[i]) {
+					minDiff = i;
+					couldSearch = true;
+				}
+			}
+			if (couldSearch) {
+				returnXY.x = vec[minDiff - 1][0];
+				returnXY.y = vec[minDiff - 1][1];
+				break;
+			}
+			count++;
+		}
+	}
+	if (!couldSearch) {
+		returnXY.x = 0;
+		returnXY.y = 0;
+	}
+	return returnXY;
 }
